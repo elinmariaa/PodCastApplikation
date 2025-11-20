@@ -123,7 +123,7 @@ namespace PodCastApplikation.Business
                 throw new InvalidOperationException("Podden kunde inte hittas.");
             }
 
-            await _poddRepository.TaBortPodd(poddId);
+            await _poddRepository.TaBortPodd(string id);
         }
 
         // Metod för att lägga till en ny kategori
