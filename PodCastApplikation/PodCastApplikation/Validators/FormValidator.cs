@@ -9,58 +9,58 @@ namespace PodCastApplikation.Validators
     public static class FormValidator
     {
         // Metod för att validera URL
-        public static bool IsValidUrl(string url)
+        public static bool ÄrGiltigUrl(string url)
         {
             if (string.IsNullOrEmpty(url))
                 return false;
 
-            return Uri.TryCreate(url, UriKind.Absolute, out Uri? validatedUri)
-                   && (validatedUri.Scheme == Uri.UriSchemeHttp || validatedUri.Scheme == Uri.UriSchemeHttps);
+            return Uri.TryCreate(url, UriKind.Absolute, out Uri? uri)
+                   && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
         }
 
         // Metod för att validera poddflöde namn
-        public static bool IsValidFeedName(string name)
+        public static bool ÄrGiltigtPoddNamn(string namn)
         {
-            return !string.IsNullOrWhiteSpace(name)
-                && name.Trim().Length >= 2
-                && name.Length <= 50
-                && name == name.Trim();
+            return !string.IsNullOrWhiteSpace(namn)
+                && namn.Trim().Length >= 2
+                && namn.Length <= 50
+                && namn == namn.Trim();
         }
 
         // Metod för att validera kategori namn
-        public static bool IsValidCategoryName(string name)
+      public static bool ÄrGiltigtKategoriNamn(string namn)
         {
-            return !string.IsNullOrWhiteSpace(name)
-                && name.Trim().Length >= 2
-                && name.Length <= 50
-                && name == name.Trim();
+            return !string.IsNullOrWhiteSpace(namn)
+                && namn.Trim().Length >= 2
+                && namn.Length <= 50
+                && namn == namn.Trim();
         }
 
         // Metod för att kontrollera om ett poddflöde är valt
-        public static bool IsValidFeed(object feed)
+        public static bool ÄrPoddVald(object podd)
         {
-            return feed != null;
+            return podd != null;
         }
 
         // Metod för att kontrollera om en kategori är vald
-        public static bool IsCategorySelected(object category)
+        public static bool ÄrKategoriVald(object kategori)
         {
-            return category != null;
+            return kategori != null;
         }
 
         // Metod för att kontrollera om en kategori är vald för borttagning
-        public static bool IsCategorySelectedForDeletion(object category)
+        public static bool ÄrKategoriValdFörBorttagning(object kategori)
         {
-            return category != null;
+            return kategori != null;
         }
 
         // Metod för att validera uppdateringsintervall
-        public static bool IsValidUpdateInterval(string text)
+        public static bool ÄrGiltigtUppdateringsIntervall(string text)
         {
             return !string.IsNullOrWhiteSpace(text)
-                && int.TryParse(text, out int interval)
-                && interval >= 5
-                && interval <= 60;
+                && int.TryParse(text, out int intervall)
+                && intervall >= 5
+                && intervall <= 60;
         }
 
 
