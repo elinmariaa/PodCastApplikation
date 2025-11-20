@@ -16,17 +16,20 @@ namespace PodCastApplikation.Business.Validation
             && namn.Trim().Length <= 50;
         }
 
+        // Kollar att rssUrl är unik bland befintliga poddar
         public static bool ÄrUnikRssUrl(string rssUrl, List<Models.Klasser.Podd> befintligaPoddar)
         {
             return !befintligaPoddar
                 .Any(p => p.RssUrl.Equals(rssUrl, StringComparison.OrdinalIgnoreCase));
         }
 
+        // Kollar att poddId inte är tomt eller null
         public static bool ÄrGiltigtId(string poddId)
         {
             return !string.IsNullOrWhiteSpace(poddId);
         }
 
+        // Kollar att kategoriId inte är tomt eller null
         public static bool ÄrGiltigKategori(string kategoriId)
         {
             return !string.IsNullOrWhiteSpace(kategoriId);
