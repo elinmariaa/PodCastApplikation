@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Models.Exceptions
+namespace Models.Undantag
 {
     public class RssHämtningMisslyckades : Exception
     {

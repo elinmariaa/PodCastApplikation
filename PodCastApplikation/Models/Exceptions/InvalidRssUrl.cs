@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace Models.Exceptions
+namespace Models.Undantag
 {
     public class InvalidRssUrl : Exception
     {
