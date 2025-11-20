@@ -20,7 +20,7 @@ namespace PodCastApplikation.Business.Validation
         public static bool ÄrUnikRssUrl(string rssUrl, List<Models.Klasser.Podd> befintligaPoddar)
         {
             return !befintligaPoddar
-                .Any(p => p.RssUrl.Equals(rssUrl, StringComparison.OrdinalIgnoreCase));
+                .Any(p => p.RssURL.Equals(rssUrl, StringComparison.OrdinalIgnoreCase));
         }
 
         // Kollar att poddId inte är tomt eller null
