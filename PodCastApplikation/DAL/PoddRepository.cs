@@ -43,10 +43,12 @@ namespace DAL.Mongo // Namespace utifrån att projektet heter "DAL" och mappen "
 
         }
 
-        public async Task<Podd> HämtaPoddMedId(string id)
+        public async Task<Podd> HämtaPoddMedId(string id) // Hämtar podden med hjälp av id 
 
-        { 
-            throw new NotImplementedException();
+        {
+            var filter = Builders<Podd>.Filter.Eq(p => p.Id, id);
+           
+            return await _poddar.Find(filter).FirstOrDefaultAsync(); 
         }
 
         public async Task SparaPodd(Podd podd) // spara en ny podd
@@ -56,13 +58,18 @@ namespace DAL.Mongo // Namespace utifrån att projektet heter "DAL" och mappen "
 
         public async Task UppdateraPodd(Podd podd) // uppdaterar befintliga poddar
 
-        { throw new NotImplementedException();
+        {
 
+            var filter = Builders<Podd>.Filter.Eq(p => p.Id, podd.Id);
+
+            await _poddar.ReplaceOneAsync(filter, podd);    
         }
 
         public async Task TabortPodd(string id) // ta bort en podd gennom id
-        { 
-            throw new NotImplementedException();    
+        {
+            var filter = Builders<Podd>.Filter.Eq(p => p.Id, id);
+          
+            await _poddar.DeleteOneAsync(filter);
         }
     }
 
