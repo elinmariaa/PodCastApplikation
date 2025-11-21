@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PodCastApplikation.Business;
 using Models.Interfaces;
+
 using Models.Klasser;
 
 namespace PodCastApplikation.Business
 {
-    public class PoddService
+    public class PoddService : IPoddService
     {
         private readonly IRssHämtare _rssHämtare;
         private readonly IPoddRepository _poddRepository;
@@ -149,7 +151,7 @@ namespace PodCastApplikation.Business
                 Namn = namn
             };
 
-            await _kategoriRepository.SparaKategori(nykategori);
+            await _kategoriRepository.SparaKategori(kategori);
         }
 
         // Metod för att uppdatera en kategoris namn
