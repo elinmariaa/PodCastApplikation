@@ -6,6 +6,7 @@ using Models.Undantag;
 using System.Net.Http;
 using System.Xml.Linq;
 
+
 namespace DAL
 {
     public class RssHämtare : IRssHämtare
