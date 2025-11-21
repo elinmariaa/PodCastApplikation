@@ -109,21 +109,21 @@ namespace PodCastApplikation.Business
         }
 
         // Metod för att ta bort ett poddflöde
-        public async Task TaBortPodd(string poddId)
+        public async Task TabortPodd(string id)
         {
-            if (string.IsNullOrWhiteSpace(poddId))
+            if (string.IsNullOrWhiteSpace(id))
             {
                 throw new ArgumentException("Podd-ID får inte vara tomt.");
             }
 
-            var podd = await _poddRepository.HämtaPoddMedId(poddId);
+            var podd = await _poddRepository.HämtaPoddMedId(id);
 
             if (podd == null)
             {
                 throw new InvalidOperationException("Podden kunde inte hittas.");
             }
 
-            await _poddRepository.TabortPodd(poddId);
+            await _poddRepository.TabortPodd(id);
         }
 
         // Metod för att lägga till en ny kategori
