@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Models.Klasser
+namespace PodCastApplikation.Models.Klasser
 {
     public class Podd
     {

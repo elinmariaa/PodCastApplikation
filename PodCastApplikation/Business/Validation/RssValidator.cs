@@ -5,31 +5,43 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
+using System;
+
 namespace PodCastApplikation.Business.Validation
 {
     public static class RssValidator
     {
-        // Kollar att rssUrl är en giltig URL (inte tom, korrekt format)
-        public static bool ÄrGiltigUrl(string rssUrl)
+        public static void ValideraRssUrl(string rssUrl)
         {
-            return !string.IsNullOrWhiteSpace(rssUrl) 
-                && Uri.TryCreate(rssUrl, UriKind.Absolute, out var uri)
-                && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
-        }
+            if (string.IsNullOrWhiteSpace(rssUrl))
+                throw new ArgumentException("RSS URL får inte vara tom.");
 
-        // Kollar att xmlText är giltig XML och innehåller en <channel>-element
-        public static bool ÄrGiltigXml (string xmlText)
-        {
-            try
-            {
-                var xml = XDocument.Parse(xmlText);
-                return xml.Root != null && xml.Root.Element("channel") != null;
-            }
-            catch
-            {
-                return false;
-            }
+            if (!rssUrl.StartsWith("http"))
+                throw new ArgumentException("RSS URL måste börja med http eller https.");
         }
 
     }
+
+
+
+
+
+
+
+
+    // Kollar att xmlText är giltig XML och innehåller en <channel>-element
+    //public static bool ÄrGiltigXml(string xmlText)
+    //        {
+    //            try
+    //            {
+    //                var xml = XDocument.Parse(xmlText);
+    //                return xml.Root != null && xml.Root.Element("channel") != null;
+    //            }
+    //            catch
+    //            {
+    //                return false;
+    //            }
+    //        }
 }
+
+

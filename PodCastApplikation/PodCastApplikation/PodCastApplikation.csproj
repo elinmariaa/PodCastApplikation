@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Business\Business.csproj" />
-    <ProjectReference Include="..\Models\Models.csproj" />
+    <ProjectReference Include="..\Business\PodCastApplikation.Business.csproj" />
+    <ProjectReference Include="..\Models\PodCastApplikation.Models.csproj" />
   </ItemGroup>
 
 </Project>

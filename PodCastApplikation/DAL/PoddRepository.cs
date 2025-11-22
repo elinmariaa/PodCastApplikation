@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MongoDB.Driver; // för MongoDB klienten
-using Models.Interfaces; // Här ligger IPOddRepository
-using Models.Klasser; // Här ligger klassen Podd
+using PodCastApplikation.Models.Interfaces; // Här ligger IPOddRepository
+using PodCastApplikation.Models.Klasser; // Här ligger klassen Podd
 
 
-namespace DAL.Mongo // Namespace utifrån att projektet heter "DAL" och mappen "Mongo"
+namespace PodCastApplikation.DAL // Namespace utifrån att projektet heter "DAL" och mappen "Mongo"
 
 {
     // Denna klass sköter all kontakt med MongoDB för poddar
@@ -20,7 +20,8 @@ namespace DAL.Mongo // Namespace utifrån att projektet heter "DAL" och mappen "
         public PoddRepository() // Konstruktorn körs när du skapar ett nytt PoddRepository objekt. Här skapas kopplingen till MongoDB och vi viljer databas + collection
 
         {
-            var conncetionString = "mongodb+srv://OruMongoDBAdmin:mByfTKzZCnVYXgw8@orumongodb.5yfpn9e.mongodb.net/?appName=OruMongoDB"; // Anluter MongDB conncetion strängen till Projektet
+            var conncetionString = "mongodb+srv://OruMongoDBAdmin2:orumongoDB@orumongodb.wtryamo.mongodb.net/OruMongoDB?retryWrites=true&w=majority";
+                    // Anluter MongDB conncetion strängen till Projektet
       
             _client = new MongoClient(conncetionString); // Skapar en klient = kopplingen mot MOngoDb-kluster
 

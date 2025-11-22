@@ -1,10 +1,10 @@
 ﻿using MongoDB.Driver;
-using Models.Interfaces;
-using Models.Klasser;
+using PodCastApplikation.Models.Interfaces;
+using PodCastApplikation.Models.Klasser;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DAL.Mongo
+namespace PodCastApplikation.DAL
 {
     public class KategoriRepository : IKategoriRepository
     {
@@ -30,10 +30,7 @@ namespace DAL.Mongo
             return lista;
         }
 
-        public async Task SkapaKategori(Kategori kategori)
-        {
-            await _kategorier.InsertOneAsync(kategori);
-        }
+     
 
         public async Task UppdateraKategori(Kategori kategori)
         {
@@ -45,6 +42,10 @@ namespace DAL.Mongo
         {
             var filter = Builders<Kategori>.Filter.Eq(k => k.Id, id);
             await _kategorier.DeleteOneAsync(filter);
+        }
+        public async Task SparaKategori(Kategori kategori)
+        {
+            await _kategorier.InsertOneAsync(kategori);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace Models.Undantag
+namespace Models.Exceptions
 {
     public class KategoriFinnsRedan : Exception
     {

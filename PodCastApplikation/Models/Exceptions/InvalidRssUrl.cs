@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace Models.Undantag
+namespace PodCastApplikation.Models.Exceptions
 {
     public class InvalidRssUrl : Exception
     {

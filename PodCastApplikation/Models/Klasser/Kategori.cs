@@ -1,6 +1,6 @@
 ﻿
 
-namespace Models.Klasser
+namespace PodCastApplikation.Models.Klasser
 {
     public class Kategori
     {
