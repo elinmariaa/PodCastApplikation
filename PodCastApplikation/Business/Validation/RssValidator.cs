@@ -1,35 +1,73 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using static System.Net.WebRequestMethods;
 
 namespace PodCastApplikation.Business.Validation
 {
     public static class RssValidator
     {
-        // Kollar att rssUrl är en giltig URL (inte tom, korrekt format)
-        public static bool ÄrGiltigUrl(string rssUrl)
+        public static void ValideraRssUrl(string rssUrl) // Kollar att länken inte är tom och har rätt format
         {
-            return !string.IsNullOrWhiteSpace(rssUrl) 
-                && Uri.TryCreate(rssUrl, UriKind.Absolute, out var uri)
-                && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
+            if (string.IsNullOrWhiteSpace(rssUrl))
+                throw new ArgumentException("RSS URL får inte vara tom.");
+
+            if (!rssUrl.StartsWith("http"))
+                throw new ArgumentException("RSS URL måste börja med http eller https.");
         }
 
-        // Kollar att xmlText är giltig XML och innehåller en <channel>-element
-        public static bool ÄrGiltigXml (string xmlText)
+        public static async Task ValideraRssInnehålle(string rssUrl)
         {
             try
             {
-                var xml = XDocument.Parse(xmlText);
-                return xml.Root != null && xml.Root.Element("channel") != null;
+                using (var http = new HttpClient()) 
+                {
+                    string xmlText = await http.GetStringAsync(rssUrl);
+
+                    var xml = XDocument.Parse(xmlText);
+
+                    if (xml.Root == null || xml.Root.Element("channel") == null)
+                        throw new ArgumentException("RSS-flödet saknar giltigt <channel>-element.");
+                }
             }
-            catch
+            catch (HttpRequestException)
             {
-                return false;
+                throw new ArgumentException("Kunde inte nå RSS-länken – kontrollera internet eller adressen.");
             }
+            catch (Exception)
+            {
+                throw new ArgumentException("RSS-länken innehåller inte giltig XML.");
+            }
+
+
+
+        }
+
         }
 
     }
-}
+
+
+
+
+
+
+
+
+    // Kollar att xmlText är giltig XML och innehåller en <channel>-element
+    //public static bool ÄrGiltigXml(string xmlText)
+    //        {
+    //            try
+    //            {
+    //                var xml = XDocument.Parse(xmlText);
+    //                return xml.Root != null && xml.Root.Element("channel") != null;
+    //            }
+    //            catch
+    //            {
+    //                return false;
+    //            }
+    //        }
+//}
+
+

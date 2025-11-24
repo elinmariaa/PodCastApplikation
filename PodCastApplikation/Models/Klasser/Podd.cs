@@ -1,10 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
-namespace Models.Klasser
+
+
+namespace PodCastApplikation.Models.Klasser
 {
     public class Podd
     {
+        [BsonId] // anger att detta fält är dokumentets unika ID i MongoDB
+        [BsonRepresentation(BsonType.ObjectId)]
+
         public string? Id { get; set; } // get/set tillåter läsning/skrivning
         public string? OriginalTitel { get; set; } // Titel från RSS-flödet
 

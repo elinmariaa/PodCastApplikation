@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MongoDB.Driver; // för MongoDB klienten
-using Models.Interfaces; // Här ligger IPOddRepository
-using Models.Klasser; // Här ligger klassen Podd
+using PodCastApplikation.Models.Interfaces; // Här ligger IPOddRepository
+using PodCastApplikation.Models.Klasser;// Här ligger klassen Podd
 
 
-namespace DAL.Mongo // Namespace utifrån att projektet heter "DAL" och mappen "Mongo"
+
+namespace PodCastApplikation.DAL // Namespace utifrån att projektet heter "DAL" och mappen "Mongo"
 
 {
     // Denna klass sköter all kontakt med MongoDB för poddar
@@ -20,7 +21,8 @@ namespace DAL.Mongo // Namespace utifrån att projektet heter "DAL" och mappen "
         public PoddRepository() // Konstruktorn körs när du skapar ett nytt PoddRepository objekt. Här skapas kopplingen till MongoDB och vi viljer databas + collection
 
         {
-            var conncetionString = "mongodb+srv://OruMongoDBAdmin:mByfTKzZCnVYXgw8@orumongodb.5yfpn9e.mongodb.net/?appName=OruMongoDB"; // Anluter MongDB conncetion strängen till Projektet
+            var conncetionString = "mongodb+srv://OruMongoDBAdmin2:orumongoDB@orumongodb.wtryamo.mongodb.net/OruMongoDB?retryWrites=true&w=majority";
+                    // Anluter MongDB conncetion strängen till Projektet
       
             _client = new MongoClient(conncetionString); // Skapar en klient = kopplingen mot MOngoDb-kluster
 
@@ -35,11 +37,15 @@ namespace DAL.Mongo // Namespace utifrån att projektet heter "DAL" och mappen "
         public async Task<List<Podd>> HämtaAllaPoddar()
         
         { 
-            var lista = await _poddar
-            .Find(Builders<Podd>.Filter.Empty)
-            .ToListAsync();
-
-            return lista;     // Hämtar alla dokument i collectionen (inget filter = allt)
+            try
+            {
+               return await _poddar.Find(Builders<Podd>.Filter.Empty).ToListAsync();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("fel vid hämtning av poddar från databas. ", ex);
+            }
+            
 
         }
 
@@ -53,24 +59,46 @@ namespace DAL.Mongo // Namespace utifrån att projektet heter "DAL" och mappen "
 
         public async Task SparaPodd(Podd podd) // spara en ny podd
         {
-            await _poddar.InsertOneAsync(podd);
+            try
+            {
+                await _poddar.InsertOneAsync(podd);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Fel vi försök att spara podd i databas.", ex);
+            }
         }
+                
 
         public async Task UppdateraPodd(Podd podd) // uppdaterar befintliga poddar
 
         {
+            try
+            {
+                var filter = Builders<Podd>.Filter.Eq(p => p.Id, podd.Id);
 
-            var filter = Builders<Podd>.Filter.Eq(p => p.Id, podd.Id);
-
-            await _poddar.ReplaceOneAsync(filter, podd);    
+                await _poddar.ReplaceOneAsync(filter, podd);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Fel vid uppdatering av podd i databasen.", ex);
+            }
+              
         }
 
         public async Task TabortPodd(string id) // ta bort en podd gennom id
         {
-            var filter = Builders<Podd>.Filter.Eq(p => p.Id, id);
-          
-            await _poddar.DeleteOneAsync(filter);
+            try
+            {
+                var filter = Builders<Podd>.Filter.Eq(p => p.Id, id);
+                await _poddar.DeleteOneAsync(filter);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Fel vid borttagning av podd i databasen.", ex);
+            }
         }
+
     }
 
 }
