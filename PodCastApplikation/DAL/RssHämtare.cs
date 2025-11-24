@@ -2,8 +2,9 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using PodCastApplikation.Models.Interfaces;
-using PodCastApplikation.Models.Exceptions;
+using PodCastApplikation.Models;
 using PodCastApplikation.Models.Klasser;
+
 
 
 
@@ -17,7 +18,7 @@ namespace PodCastApplikation.DAL
             if (string.IsNullOrWhiteSpace(rssUrl) || !rssUrl.StartsWith("http"))
             {
                 //Stannar programmet och säger att länken är ogiltig
-                throw new InvalidRssUrl("Rss-adressen är ogiltig");
+                throw new Exception("Rss-adressen är ogiltig");
             }
 
             //Här kommer texten från RSS-filen hamna
@@ -37,7 +38,7 @@ namespace PodCastApplikation.DAL
             catch 
             {
                 //Om något går fel vid hämtningen slänger vi ett eget fel
-                throw new RssHämtningMisslyckades("Kunde inte hämta RSS-flödet från internet.");
+                throw new Exception("Kunde inte hämta RSS-flödet från internet.");
             }
 
             

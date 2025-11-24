@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
-using PodCastApplikation.Models.Exceptions;
+using PodCastApplikation.Models;
 using PodCastApplikation.Models.Klasser;
 
 namespace PodCastApplikation.DAL
@@ -18,13 +18,13 @@ namespace PodCastApplikation.DAL
             }
             catch
             {
-                throw new RssHämtningMisslyckades("Rss-flödet innehåller ogiltigt XML");
+                throw new Exception("Rss-flödet innehåller ogiltigt XML");
             }
 
 
             var channel = xml.Root?.Element("channel"); //LEta efter channel
             if (channel == null)
-                throw new RssHämtningMisslyckades("Kunde inte hitta 'channel' i RSS-flödet");
+                throw new Exception("Kunde inte hitta 'channel' i RSS-flödet");
 
             
             string? titel = channel.Element("title")?.Value; //Hämta poddens grundinfo

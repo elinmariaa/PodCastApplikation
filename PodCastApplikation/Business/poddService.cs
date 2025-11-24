@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MongoDB.Driver;
 using PodCastApplikation.Business;
 using PodCastApplikation.Models.Interfaces;
-
 using PodCastApplikation.Models.Klasser;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.ConstrainedExecution;
+using System.Threading.Tasks;
+
 
 namespace PodCastApplikation.Business.Validation;
 
@@ -30,24 +31,28 @@ public class PoddService : IPoddService
     {
         try
         {
+            //1. Kolla att RSSlänk är giltig
             RssValidator.ValideraRssUrl(rssUrl);
             await RssValidator.ValideraRssInnehålle(rssUrl);
+            
+            //Hämta alla poddar och kolla så länken inte finns redan
             var allaPoddar = await _poddRepository.HämtaAllaPoddar();
-
             if (!PoddValidator.ÄrUnikRssUrl(rssUrl, allaPoddar))
                 throw new InvalidOperationException("Podden finns redan i systemet.");
 
+
+            //Hämtar podden via RSS och skapar podden
              var podd = await _rssHämtare.HämtaPoddFrånRssUrl(rssUrl);
-             await _poddRepository.SparaPodd(podd);
+            //sparar podden i databas
+            await _poddRepository.SparaPodd(podd);
         }
         catch(Exception ex)
         {
+            // Ger UI - lagret mer info om vad som gick fel
             throw new Exception("fel i PoddService.LäggTillPodd - kunde inte lägga till podd.", ex);
-        }
-          
+        }   
         
     }
-
 
                                                         // Metod för att hämta alla poddflöden
     public async Task<List<Podd>> HämtaAllaPoddar()
@@ -88,37 +93,7 @@ public class PoddService : IPoddService
 
         await _poddRepository.UppdateraPodd(podd);
     }
-
-    // Metod för att uppdatera poddflödets kategori
-    public async Task UppdateraPoddKategori(string poddId, string nyKategoriId)
-    {
-        if (string.IsNullOrWhiteSpace(nyKategoriId))
-        {
-            throw new ArgumentException("Kategori-ID får inte vara tomt.");
-        }
-
-        var podd = await _poddRepository.HämtaPoddMedId(poddId);
-
-        if (podd == null)
-        {
-            throw new InvalidOperationException("Podden kunde inte hittas.");
-        }
-
-        var kategori = (await _kategoriRepository.HämtaAllaKategorier())
-                       .FirstOrDefault(k => k.Id == nyKategoriId);
-
-        if (kategori == null)
-        {
-            throw new InvalidOperationException("Kategorin kunde inte hittas.");
-        }
-
-        podd.KategoriId = nyKategoriId;
-
-        await _poddRepository.UppdateraPodd(podd);
-
-    }
-
-    // Metod för att ta bort ett poddflöde
+    
     public async Task TaBortPodd(string poddId)
     {
         if (string.IsNullOrWhiteSpace(poddId))
@@ -136,9 +111,42 @@ public class PoddService : IPoddService
         await _poddRepository.TabortPodd(poddId);
     }
 
+    // Metod för att uppdatera poddflödets kategori
+    public async Task UppdateraPoddKategori(string poddId, string nyKategoriId)
+    {
+        if (string.IsNullOrWhiteSpace(nyKategoriId))
+        {
+            throw new ArgumentException("Kategori-ID får inte vara tomt.");
+        }
+
+        var podd = await _poddRepository.HämtaPoddMedId(poddId);
+
+        if (podd == null)
+        {
+            throw new InvalidOperationException("Podden kunde inte hittas.");
+        }
+
+        var kategoriLista = await _kategoriRepository.HämtaAllaKategorier();
+        var kategori = kategoriLista.FirstOrDefault(k => k.Id == nyKategoriId);
+
+        if (kategori == null)
+        {
+            throw new InvalidOperationException("Kategorin kunde inte hittas.");
+        }
+
+        podd.KategoriId = nyKategoriId;
+
+        await _poddRepository.UppdateraPodd(podd);
+
+    }
+
+   
+
     // Metod för att lägga till en ny kategori
     public async Task LäggTillKategori(string namn)
     {
+        try
+        {
         if (string.IsNullOrWhiteSpace(namn) || namn.Trim().Length < 2 || namn.Trim().Length > 50)
         {
             throw new ArgumentException("Det angivna kategorinamnet är ogiltigt.");
@@ -160,6 +168,11 @@ public class PoddService : IPoddService
         };
 
         await _kategoriRepository.SparaKategori(kategori);
+    }
+        catch (Exception ex)
+          {
+            throw new Exception("Fel i PoddService.LäggTillKategori: kunde inte spara kategori.", ex);
+           }
     }
 
     // Metod för att uppdatera en kategoris namn

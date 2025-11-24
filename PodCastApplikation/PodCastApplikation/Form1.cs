@@ -1,10 +1,8 @@
 ﻿using System;
-
 using System.Windows.Forms;
 using PodCastApplikation.Business;
-using PodCastApplikation.Models.Klasser;
 using System.Threading.Tasks;
-using PodCastApplikation.Business.Validation;
+
 
 
 
@@ -15,12 +13,7 @@ namespace PodCastApplikation
     public partial class Form1 : Form
     {
         private readonly IPoddService _service;
-        public Form1()
-
-        {
-            InitializeComponent();
-        }
-
+        
 
         public Form1(IPoddService service)
         {
@@ -212,14 +205,9 @@ namespace PodCastApplikation
         }
 
 
-
-        // -------------------------------
-
         // FILTRERING (kategori → poddar)
 
-        // -------------------------------
-
-
+       
 
         private void CmbFiltreraKategori_SelectedIndexChanged(object sender, EventArgs e)
 
@@ -230,21 +218,15 @@ namespace PodCastApplikation
         }
 
 
-
-        // -------------------------------
-
         // KATEGORIFÖNSTER
 
-        // -------------------------------
-
-
+      
 
         private void BtnOppenKategoriFonster_Click(object sender, EventArgs e)
 
         {
 
-            Form2 kategoriFonster = new Form2();
-
+            Form2 kategoriFonster = new Form2(_service); // Skickar in din PoddService-instans
             kategoriFonster.Show();
 
         }

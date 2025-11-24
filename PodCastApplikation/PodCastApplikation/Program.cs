@@ -9,8 +9,12 @@ namespace PodCastApplikation
     {
         
         [STAThread]
-        static void Main()
+        static async Task Main()
         {
+            var repo = new KategoriRepository();
+            var alla = await repo.HämtaAllaKategorier();
+            Console.WriteLine($"Antal kategorier: {alla.Count}");
+
             ApplicationConfiguration.Initialize();
 
             var rssHämtare = new RssHämtare();
