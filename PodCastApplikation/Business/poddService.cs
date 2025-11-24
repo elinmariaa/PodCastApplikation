@@ -28,28 +28,24 @@ public class PoddService : IPoddService
     // Metod för att lägga till ett nytt poddflöde
     public async Task LäggTillPodd(string rssUrl)
     {
-        Console.WriteLine("Kom in i PoddService.LäggTillPodd");
+        try
+        {
+            RssValidator.ValideraRssUrl(rssUrl);
+            await RssValidator.ValideraRssInnehålle(rssUrl);
+            var allaPoddar = await _poddRepository.HämtaAllaPoddar();
 
+            if (!PoddValidator.ÄrUnikRssUrl(rssUrl, allaPoddar))
+                throw new InvalidOperationException("Podden finns redan i systemet.");
 
-        RssValidator.ValideraRssUrl(rssUrl);
-
-
-
-        var allaPoddar = await _poddRepository.HämtaAllaPoddar();
-
-        bool finnsRedan = allaPoddar
-            .Any(p => p.RssURL.Equals(rssUrl, StringComparison.OrdinalIgnoreCase));
-
-        if (finnsRedan)
-            throw new InvalidOperationException("Podden finns redan i systemet.");
-
-       
-        var podd = await _rssHämtare.HämtaPoddFrånRssUrl(rssUrl);
-
-        Console.WriteLine("RSS hämtad!");
-
-
-        await _poddRepository.SparaPodd(podd);
+             var podd = await _rssHämtare.HämtaPoddFrånRssUrl(rssUrl);
+             await _poddRepository.SparaPodd(podd);
+        }
+        catch(Exception ex)
+        {
+            throw new Exception("fel i PoddService.LäggTillPodd - kunde inte lägga till podd.", ex);
+        }
+          
+        
     }
 
 

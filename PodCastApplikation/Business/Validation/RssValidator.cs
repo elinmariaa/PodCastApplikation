@@ -1,23 +1,53 @@
 ﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-
-using System;
+using static System.Net.WebRequestMethods;
 
 namespace PodCastApplikation.Business.Validation
 {
     public static class RssValidator
     {
-        public static void ValideraRssUrl(string rssUrl)
+        public static void ValideraRssUrl(string rssUrl) // Kollar att länken inte är tom och har rätt format
         {
             if (string.IsNullOrWhiteSpace(rssUrl))
                 throw new ArgumentException("RSS URL får inte vara tom.");
 
             if (!rssUrl.StartsWith("http"))
                 throw new ArgumentException("RSS URL måste börja med http eller https.");
+        }
+
+        public static async Task ValideraRssInnehålle(string rssUrl)
+        {
+            try
+            {
+                using (var http = new HttpClient()) 
+                {
+                    string xmlText = await http.GetStringAsync(rssUrl);
+
+                    var xml = XDocument.Parse(xmlText);
+
+                    if (xml.Root == null || xml.Root.Element("channel") == null)
+                        throw new ArgumentException("RSS-flödet saknar giltigt <channel>-element.");
+                }
+            }
+            catch (HttpRequestException)
+            {
+                throw new ArgumentException("Kunde inte nå RSS-länken – kontrollera internet eller adressen.");
+            }
+            catch (Exception)
+            {
+                throw new ArgumentException("RSS-länken innehåller inte giltig XML.");
+            }
+
+
+
+        }
+
         }
 
     }
@@ -42,6 +72,6 @@ namespace PodCastApplikation.Business.Validation
     //                return false;
     //            }
     //        }
-}
+//}
 
 
