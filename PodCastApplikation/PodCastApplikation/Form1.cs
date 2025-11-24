@@ -1,8 +1,8 @@
 ﻿using System;
-
 using System.Windows.Forms;
 using PodCastApplikation.Business;
-using Models.Klasser;
+using System.Threading.Tasks;
+
 
 
 
@@ -11,24 +11,15 @@ namespace PodCastApplikation
 {
 
     public partial class Form1 : Form
-
     {
-
-        public Form1()
-
-        {
-
-            InitializeComponent();
-
-        }
-
         private readonly IPoddService _service;
+        
 
         public Form1(IPoddService service)
         {
             InitializeComponent();
             _service = service;
-        
+
 
 
             // Poddfunktions-knappar
@@ -77,9 +68,25 @@ namespace PodCastApplikation
 
 
 
-        private void BtnLaggTillPodd_Click(object sender, EventArgs e)
+        private async void BtnLaggTillPodd_Click(object sender, EventArgs e)
 
         {
+
+            try
+            {
+                string rssUrl = txtRssLank.Text; //UI hämtar text från rutan
+
+                await _service.LäggTillPodd(rssUrl); //UI pratar med business lagret
+
+                MessageBox.Show("Podd tillagd");
+
+                await LaddaAllaPoddar();
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
             // Hämta RSS → Visa i listbox → (Ej spara än)
 
@@ -87,11 +94,25 @@ namespace PodCastApplikation
 
 
 
-        private void BtnVisaAlla_Click(object sender, EventArgs e)
+        private async void BtnVisaAlla_Click(object sender, EventArgs e)
 
         {
 
-            // Ladda alla poddar från lagring/databas
+            try
+            {
+                var poddar = await _service.HämtaAllaPoddar();
+
+                lstPoddar.Items.Clear(); //rensar gamla värden
+
+                foreach (var podd in poddar)
+                {
+                    lstPoddar.Items.Add(podd.OriginalTitel); //visar titel på alla poddar
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Fel: {ex.Message}");
+            }
 
         }
 
@@ -137,6 +158,18 @@ namespace PodCastApplikation
 
         }
 
+        private async Task LaddaAllaPoddar()
+        {
+            var poddar = await _service.HämtaAllaPoddar();
+
+            lstPoddar.Items.Clear();
+            foreach (var podd in poddar)
+            {
+                lstPoddar.Items.Add(podd.OriginalTitel);
+            }
+        }
+
+
 
 
         // -------------------------------
@@ -172,14 +205,9 @@ namespace PodCastApplikation
         }
 
 
-
-        // -------------------------------
-
         // FILTRERING (kategori → poddar)
 
-        // -------------------------------
-
-
+       
 
         private void CmbFiltreraKategori_SelectedIndexChanged(object sender, EventArgs e)
 
@@ -190,21 +218,15 @@ namespace PodCastApplikation
         }
 
 
-
-        // -------------------------------
-
         // KATEGORIFÖNSTER
 
-        // -------------------------------
-
-
+      
 
         private void BtnOppenKategoriFonster_Click(object sender, EventArgs e)
 
         {
 
-            Form2 kategoriFonster = new Form2();
-
+            Form2 kategoriFonster = new Form2(_service); // Skickar in din PoddService-instans
             kategoriFonster.Show();
 
         }
@@ -214,7 +236,6 @@ namespace PodCastApplikation
         private void lblBeskrivning_Click(object sender, EventArgs e)
 
         {
-
 
 
         }
@@ -259,7 +280,7 @@ namespace PodCastApplikation
 
         }
 
-      
+
     }
 
 }

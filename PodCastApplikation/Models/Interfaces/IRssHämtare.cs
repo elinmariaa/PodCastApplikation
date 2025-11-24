@@ -1,7 +1,7 @@
-﻿using Models.Klasser;
+﻿using PodCastApplikation.Models.Klasser;
 using System.Threading.Tasks;
 
-namespace Models.Interfaces
+namespace PodCastApplikation.Models.Interfaces
 {
     public interface IRssHämtare
     {

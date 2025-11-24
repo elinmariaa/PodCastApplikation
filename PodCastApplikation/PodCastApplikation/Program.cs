@@ -1,17 +1,35 @@
+using PodCastApplikation.Business;
+using PodCastApplikation.Business.Validation;
+using PodCastApplikation.DAL;
+
+
 namespace PodCastApplikation
 {
     internal static class Program
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
+        
         [STAThread]
-        static void Main()
+        static async Task Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
+            var repo = new KategoriRepository();
+            var alla = await repo.HämtaAllaKategorier();
+            Console.WriteLine($"Antal kategorier: {alla.Count}");
+
             ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+
+            var rssHämtare = new RssHämtare();
+            var poddRepository = new PoddRepository();
+            var kategoriRepository = new KategoriRepository();
+
+            var poddService = new PoddService(rssHämtare, poddRepository, kategoriRepository);
+
+           
+            Application.Run(new Form1(poddService));
+
+
+       
+            
+           
         }
     }
 }
