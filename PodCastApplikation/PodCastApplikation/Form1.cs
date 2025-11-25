@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,7 +18,7 @@ namespace PodCastApplikation
     {
         private readonly IPoddService _service;
 
-
+        private List<Avsnitt> _aktuellaAvsnitt = new();
         public Form1(IPoddService service)
         {
             InitializeComponent();
@@ -155,7 +156,7 @@ namespace PodCastApplikation
         {
             try
             {
-                if ( lstPoddar.SelectedItem == null)
+                if (lstPoddar.SelectedItem == null)
                 {
                     MessageBox.Show("Välj en podd att spara.");
                     return;
@@ -189,7 +190,8 @@ namespace PodCastApplikation
         private async void BtnBytNamnPodd_Click(object sender, EventArgs e)
 
         {
-            try {  
+            try
+            {
                 if (lstPoddar.SelectedItem == null)
                 {
                     MessageBox.Show("Välj en podd att byta namn på.");
@@ -201,7 +203,7 @@ namespace PodCastApplikation
                     MessageBox.Show("Ange ett giltigt nytt namn.");
                     return;
                 }
-               
+
                 await _service.UppdateraPoddNamn(
                     (await _service.HämtaAllaPoddar())[lstPoddar.SelectedIndex].Id,
                     nyttNamn
@@ -237,18 +239,36 @@ namespace PodCastApplikation
 
 
 
-        private void BtnVisaAvsnitt_Click(object sender, EventArgs e)
+        private async void BtnVisaAvsnitt_Click(object sender, EventArgs e)
 
         {
-            try 
+            try
             {
                 if (lstPoddar.SelectedItem == null)
                 {
                     MessageBox.Show("Välj en podd för att visa dess avsnitt.");
                     return;
                 }
-                // Hämta avsnitt för vald podd och fyll lstAvsnitt
+
+                var poddar = await _service.HämtaAllaPoddar();
+                var valdPodd = poddar[lstPoddar.SelectedIndex];
+                var avsnittLista = await _service.HämtaAvsnittFörPodd(valdPodd.Id);
+
+                _aktuellaAvsnitt = avsnittLista;
+
+                lstAvsnitt.Items.Clear();
+
+                foreach (var avsnitt in avsnittLista)
+                {
+                    lstAvsnitt.Items.Add(avsnitt.Titel);
+                }
+
+                if (avsnittLista.Count == 0)
+                {
+                    MessageBox.Show("Inga avsnitt hittades för den valda podden.");
+                }
             }
+
             catch (Exception ex)
             {
                 MessageBox.Show($"Fel vid hämtning av avsnitt: " + ex.Message);
@@ -261,15 +281,16 @@ namespace PodCastApplikation
         private void LstAvsnitt_SelectedIndexChanged(object sender, EventArgs e)
 
         {
+            if (lstAvsnitt.SelectedItem == null || _aktuellaAvsnitt == null)
+            {
+                return;
+            }
 
-            // När användaren klickar på ett avsnitt → Fyll detaljer
+            var avsnitt = _aktuellaAvsnitt[lstAvsnitt.SelectedIndex];
 
-            // txtTitel.Text = ...
-
-            // txtDatum.Text = ...
-
-            // txtBeskrivning.Text = ...
-
+            txtTitel.Text = avsnitt.Titel;
+            txtDatum.Text = avsnitt.PubliceringsDatum?.ToString("yyyy-MM-dd") ?? "Okänt datum";
+            txtBeskrivning.Text = avsnitt.Beskrivning;
         }
 
 
@@ -294,16 +315,16 @@ namespace PodCastApplikation
 
         {
 
-            Form2 kategoriFonster = new Form2(_service); // Skickar in din PoddService-instans
-            kategoriFonster.Show();
+            using (Form2 kategoriFonster = new Form2(_service)) // Skickar in din PoddService-instans
+            {
+                kategoriFonster.ShowDialog();
+            }
 
         }
 
         private void txtRssLank_TextChanged(object sender, EventArgs e)
 
         {
-
-
 
         }
 
@@ -313,21 +334,52 @@ namespace PodCastApplikation
 
         {
 
-
-
         }
 
         private void cmbValjKategori_SelectedIndexChanged(object sender, EventArgs e)
 
         {
 
-
-
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private async Task Form1_Load(object sender, EventArgs e)
         {
+           
+        }
 
+        private async void btnVisaAlla_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                var poddar = await _service.HämtaAllaPoddar();
+
+                lstPoddar.Items.Clear();
+
+                foreach (var podd in poddar)
+                {
+                    lstPoddar.Items.Add(podd.OriginalTitel);
+                }
+
+                MessageBox.Show("Visar alla poddar!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Fel: " + ex.Message);
+            }
+        }
+
+        private void lstAvsnitt_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            if (lstAvsnitt.SelectedItem == null || _aktuellaAvsnitt == null)
+            {
+                return;
+            }
+
+            var avsnitt = _aktuellaAvsnitt[lstAvsnitt.SelectedIndex];
+
+            txtTitel.Text = avsnitt.Titel;
+            txtDatum.Text = avsnitt.PubliceringsDatum?.ToString("yyyy-MM-dd") ?? "Okänt datum";
+            txtBeskrivning.Text = avsnitt.Beskrivning;
         }
     }
 

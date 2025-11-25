@@ -71,6 +71,13 @@
             btnLaggTillPodd.Text = "Lägg till";
             btnLaggTillPodd.UseVisualStyleBackColor = false;
             // 
+            // txtTitel
+            // 
+            txtTitel.Location = new Point(0, 0);
+            txtTitel.Name = "txtTitel";
+            txtTitel.Size = new Size(75, 23);
+            txtTitel.TabIndex = 0;
+            // 
             // lstPoddar
             // 
             lstPoddar.BackColor = SystemColors.InactiveCaption;
@@ -88,6 +95,7 @@
             btnVisaAlla.TabIndex = 3;
             btnVisaAlla.Text = "Visa alla";
             btnVisaAlla.UseVisualStyleBackColor = false;
+            btnVisaAlla.Click += btnVisaAlla_Click_1;
             // 
             // btnUppdateraPodd
             // 
@@ -155,6 +163,7 @@
             lstAvsnitt.Name = "lstAvsnitt";
             lstAvsnitt.Size = new Size(250, 164);
             lstAvsnitt.TabIndex = 14;
+            lstAvsnitt.SelectedIndexChanged += lstAvsnitt_SelectedIndexChanged_1;
             // 
             // lblValjKategori
             // 
