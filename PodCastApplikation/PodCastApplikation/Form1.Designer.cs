@@ -93,6 +93,7 @@
             lstAvsnitt.Name = "lstAvsnitt";
             lstAvsnitt.Size = new Size(250, 164);
             lstAvsnitt.TabIndex = 5;
+            lstAvsnitt.SelectedIndexChanged += LstAvsnitt_SelectedIndexChanged;
             // 
             // txtRssLank
             // 
@@ -148,6 +149,7 @@
             txtNyttNamn.Name = "txtNyttNamn";
             txtNyttNamn.Size = new Size(246, 39);
             txtNyttNamn.TabIndex = 11;
+            txtNyttNamn.TextChanged += txtNyttNamn_TextChanged;
             // 
             // btnBytNamnPodd
             // 
@@ -164,7 +166,6 @@
             btnVisaAvsnitt.Size = new Size(120, 40);
             btnVisaAvsnitt.TabIndex = 13;
             btnVisaAvsnitt.Text = "Visa avsnitt";
-            
             // 
             // lblValjKategori
             // 

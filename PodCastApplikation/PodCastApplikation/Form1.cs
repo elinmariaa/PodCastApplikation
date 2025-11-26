@@ -188,47 +188,17 @@ namespace PodCastApplikation
             txtBeskrivning.Text = avsnitt.Beskrivning;
         }
 
-        // Kategorifönster
-        private void BtnOppenKategoriFonster_Click(object sender, EventArgs e)
+        private async Task LaddaKategorier()
         {
-            using var f = new Form2(_service);
-            f.ShowDialog();
-        }
-
-        private void CmbFiltreraKategori_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // Ej implementerat i originalkod (lämnas tomt)
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            var exempelKategorier = new List<string> {
-                "Nyheter",
-                "Humor",
-                "Sport",
-                "Teknik",
-                "True Crime",
-                "Samhälle & Kultur",
-                "Vetenskap",
-                "Utbildning",
-                "Ekonomi & Business",
-                "Hälsa & Fitness",
-                "Historia",
-                "Musik",
-                "Livsstil",
-                "Film & TV",
-                "Barn & Familj",
-                "Politik",
-                "Andlighet",
-            };
+            var kategorier = await _service.HämtaAllaKategorier();
 
             cmbValjKategori.Items.Clear();
             cmbFiltreraKategori.Items.Clear();
 
-            foreach (var kategori in exempelKategorier)
+            foreach (var kategori in kategorier)
             {
-                cmbValjKategori.Items.Add(kategori);
-                cmbFiltreraKategori.Items.Add(kategori);
+                cmbValjKategori.Items.Add(kategori.Namn);
+                cmbFiltreraKategori.Items.Add(kategori.Namn);
             }
 
             if (cmbValjKategori.Items.Count > 0)
@@ -238,12 +208,38 @@ namespace PodCastApplikation
                 cmbFiltreraKategori.SelectedIndex = 0;
         }
 
+
+        // Kategorifönster
+        private async void BtnOppenKategoriFonster_Click(object sender, EventArgs e)
+        {
+            using var f = new Form2(_service);
+            f.ShowDialog();
+
+            // Ladda om kategorier efter stängning
+            await LaddaKategorier();
+        }
+
+        private void CmbFiltreraKategori_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Ej implementerat i originalkod (lämnas tomt)
+        }
+
+        private async void Form1_Load(object sender, EventArgs e)
+        {
+            await LaddaKategorier();   
+        }
+
         private void btnVisaAlla_Click_1(object sender, EventArgs e)
         {
 
         }
 
         private void btnVisaAvsnitt_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtNyttNamn_TextChanged(object sender, EventArgs e)
         {
 
         }
