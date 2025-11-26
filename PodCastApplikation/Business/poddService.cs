@@ -115,32 +115,17 @@ public class PoddService : IPoddService
     public async Task UppdateraPoddKategori(string poddId, string nyKategoriId)
     {
         if (string.IsNullOrWhiteSpace(nyKategoriId))
-        {
             throw new ArgumentException("Kategori-ID får inte vara tomt.");
-        }
-
-        var podd = await _poddRepository.HämtaPoddMedId(poddId);
-
-        if (podd == null)
-        {
-            throw new InvalidOperationException("Podden kunde inte hittas.");
-        }
 
         var kategoriLista = await _kategoriRepository.HämtaAllaKategorier();
         var kategori = kategoriLista.FirstOrDefault(k => k.Id == nyKategoriId);
 
         if (kategori == null)
-        {
             throw new InvalidOperationException("Kategorin kunde inte hittas.");
-        }
 
-        podd.KategoriId = nyKategoriId;
-
-        await _poddRepository.UppdateraPodd(podd);
-
+        await _poddRepository.UppdateraPoddKategori(poddId, nyKategoriId);
     }
 
-   
 
     // Metod för att lägga till en ny kategori
     public async Task LäggTillKategori(string namn)

@@ -68,22 +68,34 @@ namespace PodCastApplikation.DAL // Namespace utifrån att projektet heter "DAL"
                 throw new Exception("Fel vi försök att spara podd i databas.", ex);
             }
         }
-                
 
-        public async Task UppdateraPodd(Podd podd) // uppdaterar befintliga poddar
 
+        public async Task UppdateraPoddKategori(string poddId, string kategoriId)
+        {
+            try
+            {
+                var filter = Builders<Podd>.Filter.Eq(p => p.Id, poddId);
+                var update = Builders<Podd>.Update.Set(p => p.KategoriId, kategoriId);
+
+                await _poddar.UpdateOneAsync(filter, update);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Fel vid uppdatering av poddens kategori.", ex);
+            }
+        }
+
+        public async Task UppdateraPodd(Podd podd)
         {
             try
             {
                 var filter = Builders<Podd>.Filter.Eq(p => p.Id, podd.Id);
-
                 await _poddar.ReplaceOneAsync(filter, podd);
             }
             catch (Exception ex)
             {
                 throw new Exception("Fel vid uppdatering av podd i databasen.", ex);
             }
-              
         }
 
         public async Task TabortPodd(string id) // ta bort en podd gennom id

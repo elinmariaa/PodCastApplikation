@@ -37,6 +37,7 @@
             txtKategoriNamn.Name = "txtKategoriNamn";
             txtKategoriNamn.Size = new Size(200, 39);
             txtKategoriNamn.TabIndex = 0;
+            txtKategoriNamn.TextChanged += txtKategoriNamn_TextChanged;
             // 
             // lstKategorier
             // 

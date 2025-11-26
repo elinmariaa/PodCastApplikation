@@ -34,6 +34,8 @@ namespace PodCastApplikation
                 }
             };
 
+
+
             txtKategoriNamn.LostFocus += (s, e) =>
             {
                 if (string.IsNullOrWhiteSpace(txtKategoriNamn.Text))
@@ -50,8 +52,6 @@ namespace PodCastApplikation
             btnSortera.Click += BtnSortera_Click;
             btnVisaSparade.Click += BtnVisaSparade_Click;
 
-            // Ladda kategorier när fönstret öppnas
-            Load += async (s, e) => await LaddaKategorier();
         }
 
         private async Task LaddaKategorier()
@@ -70,7 +70,7 @@ namespace PodCastApplikation
             {
                 string namn = txtKategoriNamn.Text;
 
-                if (namn == "Nytt namn")
+                if (namn == "Ny kategori")
                 {
                     MessageBox.Show("Ange ett kategori-namn.");
                     return;
@@ -96,10 +96,24 @@ namespace PodCastApplikation
                     return;
                 }
 
+                // Bekräftelse-meddelande
+                var dialog = MessageBox.Show(
+                    "Är du säker på att du vill radera kategorin?",
+                    "Bekräfta radering",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning
+                );
+
+                if (dialog != DialogResult.Yes)
+                {
+                    return; // Avbryt om användaren inte trycker "Ja"
+                }
+
                 var kategorier = await _service.HämtaAllaKategorier();
                 var vald = kategorier[lstKategorier.SelectedIndex];
 
                 await _service.TaBortKategori(vald.Id);
+
                 MessageBox.Show("Kategori borttagen!");
                 await LaddaKategorier();
             }
@@ -185,6 +199,11 @@ namespace PodCastApplikation
         private void lstKategorier_SelectedIndexChanged(object sender, EventArgs e)
         {
             txtKategoriNamn.Text = lstKategorier.SelectedItem?.ToString() ?? string.Empty;
+        }
+
+        private void txtKategoriNamn_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

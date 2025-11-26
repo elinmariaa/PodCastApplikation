@@ -208,7 +208,6 @@ namespace PodCastApplikation
                 cmbFiltreraKategori.SelectedIndex = 0;
         }
 
-
         // Kategorifönster
         private async void BtnOppenKategoriFonster_Click(object sender, EventArgs e)
         {
@@ -219,14 +218,46 @@ namespace PodCastApplikation
             await LaddaKategorier();
         }
 
-        private void CmbFiltreraKategori_SelectedIndexChanged(object sender, EventArgs e)
+        private async void CmbFiltreraKategori_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Ej implementerat i originalkod (lämnas tomt)
+            try
+            {
+                // Hämta alla poddar
+                var poddar = await _service.HämtaAllaPoddar();
+
+                // Hämta alla kategorier
+                var kategorier = await _service.HämtaAllaKategorier();
+
+                if (cmbFiltreraKategori.SelectedIndex < 0)
+                    return;
+
+                var valdKategori = kategorier[cmbFiltreraKategori.SelectedIndex];
+
+                // Filtrera poddar efter kategori-id
+                var filtreradePoddar = poddar
+                    .Where(p => p.KategoriId == valdKategori.Id)
+                    .ToList();
+
+                // Rensa listboxen
+                lstPoddar.Items.Clear();
+
+                // Visa endast matchande poddar
+                foreach (var p in filtreradePoddar)
+                {
+                    lstPoddar.Items.Add(p.OriginalTitel);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Fel vid filtrering: {ex.Message}");
+            }
         }
+
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-            await LaddaKategorier();   
+            await LaddaKategorier();
+            await LaddaAllaPoddar();
         }
 
         private void btnVisaAlla_Click_1(object sender, EventArgs e)
@@ -240,6 +271,21 @@ namespace PodCastApplikation
         }
 
         private void txtNyttNamn_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnVisaAvsnitt_Click_2(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnBytNamnPodd_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lstPoddar_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }

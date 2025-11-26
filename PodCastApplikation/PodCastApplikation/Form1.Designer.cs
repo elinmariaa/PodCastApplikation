@@ -86,6 +86,7 @@
             lstPoddar.Name = "lstPoddar";
             lstPoddar.Size = new Size(250, 228);
             lstPoddar.TabIndex = 4;
+            lstPoddar.SelectedIndexChanged += lstPoddar_SelectedIndexChanged;
             // 
             // lstAvsnitt
             // 
@@ -106,7 +107,7 @@
             // 
             btnLaggTillPodd.Location = new Point(280, 128);
             btnLaggTillPodd.Name = "btnLaggTillPodd";
-            btnLaggTillPodd.Size = new Size(165, 41);
+            btnLaggTillPodd.Size = new Size(246, 41);
             btnLaggTillPodd.TabIndex = 6;
             btnLaggTillPodd.Text = "Lägg till";
             // 
@@ -114,7 +115,7 @@
             // 
             btnVisaAlla.Location = new Point(280, 175);
             btnVisaAlla.Name = "btnVisaAlla";
-            btnVisaAlla.Size = new Size(171, 39);
+            btnVisaAlla.Size = new Size(246, 39);
             btnVisaAlla.TabIndex = 7;
             btnVisaAlla.Text = "Visa alla";
             btnVisaAlla.Click += btnVisaAlla_Click_1;
@@ -123,7 +124,7 @@
             // 
             btnRaderaPodd.Location = new Point(280, 221);
             btnRaderaPodd.Name = "btnRaderaPodd";
-            btnRaderaPodd.Size = new Size(142, 38);
+            btnRaderaPodd.Size = new Size(246, 38);
             btnRaderaPodd.TabIndex = 8;
             btnRaderaPodd.Text = "Radera";
             // 
@@ -131,7 +132,7 @@
             // 
             btnUppdateraPodd.Location = new Point(280, 265);
             btnUppdateraPodd.Name = "btnUppdateraPodd";
-            btnUppdateraPodd.Size = new Size(165, 40);
+            btnUppdateraPodd.Size = new Size(246, 40);
             btnUppdateraPodd.TabIndex = 9;
             btnUppdateraPodd.Text = "Uppdatera";
             // 
@@ -139,7 +140,7 @@
             // 
             btnSparaPrenumerera.Location = new Point(280, 311);
             btnSparaPrenumerera.Name = "btnSparaPrenumerera";
-            btnSparaPrenumerera.Size = new Size(274, 43);
+            btnSparaPrenumerera.Size = new Size(246, 43);
             btnSparaPrenumerera.TabIndex = 10;
             btnSparaPrenumerera.Text = "Spara / Prenumerera";
             // 
@@ -155,17 +156,19 @@
             // 
             btnBytNamnPodd.Location = new Point(280, 405);
             btnBytNamnPodd.Name = "btnBytNamnPodd";
-            btnBytNamnPodd.Size = new Size(200, 48);
+            btnBytNamnPodd.Size = new Size(246, 48);
             btnBytNamnPodd.TabIndex = 12;
             btnBytNamnPodd.Text = "Byt namn";
+            btnBytNamnPodd.Click += btnBytNamnPodd_Click_1;
             // 
             // btnVisaAvsnitt
             // 
             btnVisaAvsnitt.Location = new Point(12, 466);
             btnVisaAvsnitt.Name = "btnVisaAvsnitt";
-            btnVisaAvsnitt.Size = new Size(120, 40);
+            btnVisaAvsnitt.Size = new Size(250, 40);
             btnVisaAvsnitt.TabIndex = 13;
             btnVisaAvsnitt.Text = "Visa avsnitt";
+            btnVisaAvsnitt.Click += btnVisaAvsnitt_Click_2;
             // 
             // lblValjKategori
             // 
