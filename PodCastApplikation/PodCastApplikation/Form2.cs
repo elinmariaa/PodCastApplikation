@@ -18,10 +18,8 @@ namespace PodCastApplikation
             InitializeComponent();
             _service = service;
 
-            // Fix: se placeholder innan textbox får fokus
             Shown += (s, e) => this.ActiveControl = null;
 
-            // Placeholder
             txtKategoriNamn.Text = "Nytt namn";
             txtKategoriNamn.ForeColor = Color.Gray;
 

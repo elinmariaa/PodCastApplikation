@@ -12,7 +12,9 @@ namespace PodCastApplikation
     {
         private readonly IPoddService _service;
         private List<Avsnitt> _aktuellaAvsnitt = new();
+        private List<Podd> _visadePoddar = new();
 
+       
         public Form1(IPoddService service)
         {
             InitializeComponent();
@@ -62,6 +64,7 @@ namespace PodCastApplikation
         private async Task LaddaAllaPoddar()
         {
             var poddar = await _service.HämtaAllaPoddar();
+            _visadePoddar = poddar;
             lstPoddar.Items.Clear();
 
             foreach (var podd in poddar)
@@ -80,8 +83,7 @@ namespace PodCastApplikation
                     return;
                 }
 
-                var poddar = await _service.HämtaAllaPoddar();
-                var valdPodd = poddar[lstPoddar.SelectedIndex];
+                var valdPodd = _visadePoddar[lstPoddar.SelectedIndex];
 
                 await _service.TaBortPodd(valdPodd.Id);
 
@@ -143,8 +145,8 @@ namespace PodCastApplikation
                     return;
                 }
 
-                var poddar = await _service.HämtaAllaPoddar();
-                await _service.UppdateraPoddNamn(poddar[lstPoddar.SelectedIndex].Id, nyttNamn);
+                var valdPodd = _visadePoddar[lstPoddar.SelectedIndex];
+                await _service.UppdateraPoddNamn(valdPodd.Id, nyttNamn);
 
                 MessageBox.Show("Namn ändrat.");
                 await LaddaAllaPoddar();
@@ -164,8 +166,7 @@ namespace PodCastApplikation
                 return;
             }
 
-            var poddar = await _service.HämtaAllaPoddar();
-            var valdPodd = poddar[lstPoddar.SelectedIndex];
+            var valdPodd = _visadePoddar[lstPoddar.SelectedIndex];
 
             _aktuellaAvsnitt = await _service.HämtaAvsnittFörPodd(valdPodd.Id);
             lstAvsnitt.Items.Clear();
@@ -234,7 +235,7 @@ namespace PodCastApplikation
                 var valdKategori = kategorier[cmbFiltreraKategori.SelectedIndex];
 
                 // Filtrera poddar efter kategori-id
-                var filtreradePoddar = poddar
+                _visadePoddar = poddar
                     .Where(p => p.KategoriId == valdKategori.Id)
                     .ToList();
 
@@ -242,7 +243,7 @@ namespace PodCastApplikation
                 lstPoddar.Items.Clear();
 
                 // Visa endast matchande poddar
-                foreach (var p in filtreradePoddar)
+                foreach (var p in _visadePoddar)
                 {
                     lstPoddar.Items.Add(p.OriginalTitel);
                 }
