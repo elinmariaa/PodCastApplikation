@@ -1,35 +1,34 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using MongoDB.Driver; // för MongoDB klienten
-using PodCastApplikation.Models.Interfaces; // Här ligger IPOddRepository
-using PodCastApplikation.Models.Klasser;// Här ligger klassen Podd
+using MongoDB.Driver; 
+using PodCastApplikation.Models.Interfaces; 
+using PodCastApplikation.Models.Klasser;
 
 
 
-namespace PodCastApplikation.DAL // Namespace utifrån att projektet heter "DAL" och mappen "Mongo"
+namespace PodCastApplikation.DAL 
 
 {
     // Denna klass sköter all kontakt med MongoDB för poddar
     public class  PoddRepository : IPoddRepository
     {
-        private  IMongoClient _client; // fält för att spara kopplingen till MongoDB - kluster
+        private  IMongoClient _client; 
 
-        private  IMongoDatabase _database; // Färlt för att hålla referens till rätt databas (OruMongoDb)
+        private  IMongoDatabase _database; 
 
-        private  IMongoCollection<Podd> _poddar; // fält för collectionen ("tabellen") där alla Podd-dokument lagras
-
-        public PoddRepository() // Konstruktorn körs när du skapar ett nytt PoddRepository objekt. Här skapas kopplingen till MongoDB och vi viljer databas + collection
+        private  IMongoCollection<Podd> _poddar; 
+        
+        public PoddRepository() 
 
         {
             var conncetionString = "mongodb+srv://OruMongoDBAdmin2:orumongoDB@orumongodb.wtryamo.mongodb.net/OruMongoDB?retryWrites=true&w=majority";
-                    // Anluter MongDB conncetion strängen till Projektet
+                    
       
-            _client = new MongoClient(conncetionString); // Skapar en klient = kopplingen mot MOngoDb-kluster
+            _client = new MongoClient(conncetionString); 
 
-            _database = _client.GetDatabase("OruMongoDB"); // Väljer databasen (OruMongoDb) i Atlas
+            _database = _client.GetDatabase("OruMongoDB"); 
 
-            // Väljer collectionen där poddar ska sparas
-            // Namnet "Poddar" kommer sysnas som collection-namn i Atlas
+     
             _poddar = _database.GetCollection<Podd>("Poddar");
 
         }
@@ -49,7 +48,7 @@ namespace PodCastApplikation.DAL // Namespace utifrån att projektet heter "DAL"
 
         }
 
-        public async Task<Podd> HämtaPoddMedId(string id) // Hämtar podden med hjälp av id 
+        public async Task<Podd> HämtaPoddMedId(string id) 
 
         {
             var filter = Builders<Podd>.Filter.Eq(p => p.Id, id);
@@ -57,7 +56,7 @@ namespace PodCastApplikation.DAL // Namespace utifrån att projektet heter "DAL"
             return await _poddar.Find(filter).FirstOrDefaultAsync(); 
         }
 
-        public async Task SparaPodd(Podd podd) // spara en ny podd
+        public async Task SparaPodd(Podd podd) 
         {
             using var session = await _client.StartSessionAsync();
             session.StartTransaction();
@@ -114,7 +113,7 @@ namespace PodCastApplikation.DAL // Namespace utifrån att projektet heter "DAL"
             }
         }
 
-        public async Task TabortPodd(string id) // ta bort en podd gennom id
+        public async Task TabortPodd(string id) 
         {
             using var session = await _client.StartSessionAsync();
             session.StartTransaction();
