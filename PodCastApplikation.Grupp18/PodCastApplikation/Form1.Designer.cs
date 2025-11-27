@@ -60,7 +60,7 @@
             txtTitel.Location = new Point(285, 486);
             txtTitel.Name = "txtTitel";
             txtTitel.ReadOnly = true;
-            txtTitel.Size = new Size(300, 39);
+            txtTitel.Size = new Size(300, 31);
             txtTitel.TabIndex = 0;
             // 
             // txtDatum
@@ -68,23 +68,26 @@
             txtDatum.Location = new Point(285, 531);
             txtDatum.Name = "txtDatum";
             txtDatum.ReadOnly = true;
-            txtDatum.Size = new Size(200, 39);
+            txtDatum.Size = new Size(200, 31);
             txtDatum.TabIndex = 1;
             // 
             // txtBeskrivning
             // 
+            txtBeskrivning.ForeColor = SystemColors.InactiveCaption;
             txtBeskrivning.Location = new Point(285, 576);
             txtBeskrivning.Multiline = true;
             txtBeskrivning.Name = "txtBeskrivning";
+            txtBeskrivning.PlaceholderText = "Beskrivning av avsnitt...";
             txtBeskrivning.ReadOnly = true;
             txtBeskrivning.Size = new Size(400, 105);
             txtBeskrivning.TabIndex = 2;
+            txtBeskrivning.TextChanged += txtBeskrivning_TextChanged;
             // 
             // lstPoddar
             // 
             lstPoddar.Location = new Point(12, 225);
             lstPoddar.Name = "lstPoddar";
-            lstPoddar.Size = new Size(250, 228);
+            lstPoddar.Size = new Size(250, 204);
             lstPoddar.TabIndex = 4;
             lstPoddar.SelectedIndexChanged += lstPoddar_SelectedIndexChanged;
             // 
@@ -92,20 +95,23 @@
             // 
             lstAvsnitt.Location = new Point(12, 517);
             lstAvsnitt.Name = "lstAvsnitt";
-            lstAvsnitt.Size = new Size(250, 164);
+            lstAvsnitt.Size = new Size(250, 154);
             lstAvsnitt.TabIndex = 5;
             lstAvsnitt.SelectedIndexChanged += LstAvsnitt_SelectedIndexChanged;
             // 
             // txtRssLank
             // 
+            txtRssLank.ForeColor = SystemColors.WindowText;
             txtRssLank.Location = new Point(12, 95);
             txtRssLank.Name = "txtRssLank";
-            txtRssLank.Size = new Size(250, 39);
+            txtRssLank.PlaceholderText = "Skriv in RSS-länk här....";
+            txtRssLank.Size = new Size(250, 31);
             txtRssLank.TabIndex = 3;
+            txtRssLank.TextChanged += txtRssLank_TextChanged;
             // 
             // btnLaggTillPodd
             // 
-            btnLaggTillPodd.Location = new Point(285, 129);
+            btnLaggTillPodd.Location = new Point(285, 130);
             btnLaggTillPodd.Name = "btnLaggTillPodd";
             btnLaggTillPodd.Size = new Size(246, 41);
             btnLaggTillPodd.TabIndex = 6;
@@ -148,7 +154,7 @@
             // 
             txtNyttNamn.Location = new Point(285, 361);
             txtNyttNamn.Name = "txtNyttNamn";
-            txtNyttNamn.Size = new Size(246, 39);
+            txtNyttNamn.Size = new Size(246, 31);
             txtNyttNamn.TabIndex = 11;
             txtNyttNamn.TextChanged += txtNyttNamn_TextChanged;
             // 
@@ -181,9 +187,10 @@
             // cmbValjKategori
             // 
             cmbValjKategori.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbValjKategori.Items.AddRange(new object[] { "Alla poddar" });
             cmbValjKategori.Location = new Point(12, 49);
             cmbValjKategori.Name = "cmbValjKategori";
-            cmbValjKategori.Size = new Size(250, 40);
+            cmbValjKategori.Size = new Size(250, 33);
             cmbValjKategori.TabIndex = 15;
             // 
             // lblFiltreraKategori
@@ -199,7 +206,7 @@
             cmbFiltreraKategori.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbFiltreraKategori.Location = new Point(12, 179);
             cmbFiltreraKategori.Name = "cmbFiltreraKategori";
-            cmbFiltreraKategori.Size = new Size(250, 40);
+            cmbFiltreraKategori.Size = new Size(250, 33);
             cmbFiltreraKategori.TabIndex = 17;
             // 
             // btnOppenKategoriFonster

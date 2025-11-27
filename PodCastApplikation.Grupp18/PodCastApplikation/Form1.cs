@@ -14,7 +14,7 @@ namespace PodCastApplikation
         private List<Avsnitt> _aktuellaAvsnitt = new();
         private List<Podd> _visadePoddar = new();
 
-       
+
         public Form1(IPoddService service)
         {
             InitializeComponent();
@@ -32,7 +32,7 @@ namespace PodCastApplikation
             cmbFiltreraKategori.SelectedIndexChanged += CmbFiltreraKategori_SelectedIndexChanged;
         }
 
-  
+
 
         // PODDAR
         private async void BtnLaggTillPodd_Click(object sender, EventArgs e)
@@ -130,6 +130,9 @@ namespace PodCastApplikation
             }
         }
 
+
+
+
         private async void BtnBytNamnPodd_Click(object sender, EventArgs e)
         {
             try
@@ -188,7 +191,7 @@ namespace PodCastApplikation
 
             txtTitel.Text = avsnitt.Titel;
             txtDatum.Text = avsnitt.PubliceringsDatum?.ToString("yyyy-MM-dd") ?? "Okänt datum";
-            txtBeskrivning.Text = avsnitt.Beskrivning;
+            txtBeskrivning.Text = string.IsNullOrWhiteSpace(avsnitt.Beskrivning) ? "Ingen beskrivning tillgänglig." : avsnitt.Beskrivning; 
         }
 
         private async Task LaddaKategorier()
@@ -197,6 +200,8 @@ namespace PodCastApplikation
 
             cmbValjKategori.Items.Clear();
             cmbFiltreraKategori.Items.Clear();
+
+           
 
             foreach (var kategori in kategorier)
             {
@@ -209,7 +214,12 @@ namespace PodCastApplikation
 
             if (cmbFiltreraKategori.Items.Count > 0)
                 cmbFiltreraKategori.SelectedIndex = 0;
+
+          
         }
+
+
+        //private async Task LaddaKategorier() { var kategorier = await _service.HämtaAllaKategorier(); cmbValjKategori.Items.Clear(); cmbFiltreraKategori.Items.Clear(); cmbFiltreraKategori.Items.Add("Alla poddar"); foreach (var kategori in kategorier) { cmbValjKategori.Items.Add(kategori.Namn); cmbFiltreraKategori.Items.Add(kategori.Namn); } if (cmbValjKategori.Items.Count > 0) cmbValjKategori.SelectedIndex = 0; if (cmbFiltreraKategori.Items.Count > 0) cmbFiltreraKategori.SelectedIndex = 0; cmbFiltreraKategori.SelectedIndex = 0; }
 
         // Kategorifönster
         private async void BtnOppenKategoriFonster_Click(object sender, EventArgs e)
@@ -256,6 +266,45 @@ namespace PodCastApplikation
             }
         }
 
+        //private async void CmbFiltreraKategori_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    try
+        //    {
+        //        var poddar = await _service.HämtaAllaPoddar();
+        //        var kategorier = await _service.HämtaAllaKategorier();
+
+        //        // Om användaren valt "Alla poddar" (första i listan)
+        //        if (cmbFiltreraKategori.SelectedIndex == 0)
+        //        {
+        //            _visadePoddar = poddar;
+        //        }
+        //        else
+        //        {
+        //            // Justera index -1 eftersom "Alla poddar" ligger först
+        //            var valdKategori = kategorier[cmbFiltreraKategori.SelectedIndex - 1];
+
+        //            _visadePoddar = poddar
+        //                .Where(p => p.KategoriId == valdKategori.Id)
+        //                .ToList();
+        //        }
+
+        //        lstPoddar.Items.Clear();
+
+        //        var allaKategorier = await _service.HämtaAllaKategorier();
+        //        foreach (var p in _visadePoddar)
+        //        {
+        //            var kategori = allaKategorier.FirstOrDefault(k => k.Id == p.KategoriId);
+        //            var kategoriNamn = kategori != null ? kategori.Namn : "Ingen kategori";
+        //            lstPoddar.Items.Add($"{p.OriginalTitel} – {kategoriNamn}");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Fel vid filtrering: {ex.Message}");
+        //    }
+        //}
+
+
 
         private async void Form1_Load(object sender, EventArgs e)
         {
@@ -289,6 +338,16 @@ namespace PodCastApplikation
         }
 
         private void lstPoddar_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtRssLank_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtBeskrivning_TextChanged(object sender, EventArgs e)
         {
 
         }
