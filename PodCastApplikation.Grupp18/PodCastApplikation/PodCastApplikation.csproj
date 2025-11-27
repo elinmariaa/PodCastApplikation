@@ -1,17 +1,10 @@
 ﻿
-
-
-
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net9.0-windows</TargetFramework>
-		<Nullable>enable</Nullable>
-
-		<!-- Aktiverar Windows Forms -->
+		<TargetFramework>net8.0-windows</TargetFramework>
 		<UseWindowsForms>true</UseWindowsForms>
-
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
