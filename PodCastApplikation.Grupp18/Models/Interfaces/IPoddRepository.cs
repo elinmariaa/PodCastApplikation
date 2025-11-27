@@ -11,7 +11,8 @@ namespace PodCastApplikation.Models.Interfaces
 
         Task SparaPodd(Podd podd);
         Task UppdateraPodd(Podd podd);
-        Task TabortPodd(string id); 
+        Task TabortPodd(string id);
+        Task UppdateraPoddKategori(string poddId, string kategoriId);
 
     }
 }

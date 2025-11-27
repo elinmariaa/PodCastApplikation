@@ -10,7 +10,7 @@ namespace PodCastApplikation.DAL
     {
         public static Podd TolkaRss(string xmlText, string rssUrl)
         {
-            XDocument xml;  //Försök att tolka XML-texten
+            XDocument xml;  
 
             try
             {
@@ -22,15 +22,15 @@ namespace PodCastApplikation.DAL
             }
 
 
-            var channel = xml.Root?.Element("channel"); //LEta efter channel
+            var channel = xml.Root?.Element("channel"); 
             if (channel == null)
                 throw new Exception("Kunde inte hitta 'channel' i RSS-flödet");
 
             
-            string? titel = channel.Element("title")?.Value; //Hämta poddens grundinfo
+            string? titel = channel.Element("title")?.Value; 
             string? beskrivning = channel.Element("description")?.Value;
 
-            var items = channel.Elements("item"); // Hämta alla avsnitt
+            var items = channel.Elements("item"); 
             var avsnittLista = new List<Avsnitt>();
 
             foreach (var item in items)
