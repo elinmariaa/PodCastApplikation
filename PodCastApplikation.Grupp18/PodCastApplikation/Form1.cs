@@ -32,6 +32,7 @@ namespace PodCastApplikation
             cmbFiltreraKategori.SelectedIndexChanged += CmbFiltreraKategori_SelectedIndexChanged;
         }
 
+  
 
         // PODDAR
         private async void BtnLaggTillPodd_Click(object sender, EventArgs e)

@@ -1,4 +1,5 @@
-﻿namespace PodCastApplikation
+﻿
+namespace PodCastApplikation
 {
     partial class Form1
     {

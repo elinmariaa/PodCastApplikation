@@ -30,7 +30,7 @@ namespace PodCastApplikation
             lstAvsnitt.SelectedIndexChanged += LstAvsnitt_SelectedIndexChanged;
             btnOppenKategoriFonster.Click += BtnOppenKategoriFonster_Click;
             cmbFiltreraKategori.SelectedIndexChanged += CmbFiltreraKategori_SelectedIndexChanged;
-        }
+        
 
         // PODDAR
         private async void BtnLaggTillPodd_Click(object sender, EventArgs e)
@@ -292,4 +292,4 @@ namespace PodCastApplikation
         }
     }
 
-}       
+}
