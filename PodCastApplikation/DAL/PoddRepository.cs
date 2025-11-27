@@ -59,12 +59,17 @@ namespace PodCastApplikation.DAL // Namespace utifrån att projektet heter "DAL"
 
         public async Task SparaPodd(Podd podd) // spara en ny podd
         {
+            using var session = await _client.StartSessionAsync();
+            session.StartTransaction();
+
             try
             {
-                await _poddar.InsertOneAsync(podd);
+                await _poddar.InsertOneAsync(session, podd);
+                await session.CommitTransactionAsync();
             }
             catch (Exception ex)
             {
+                await session.AbortTransactionAsync();
                 throw new Exception("Fel vi försök att spara podd i databas.", ex);
             }
         }
@@ -72,41 +77,59 @@ namespace PodCastApplikation.DAL // Namespace utifrån att projektet heter "DAL"
 
         public async Task UppdateraPoddKategori(string poddId, string kategoriId)
         {
+            using var session = await _client.StartSessionAsync();
+            session.StartTransaction();
+
             try
             {
-                var filter = Builders<Podd>.Filter.Eq(p => p.Id, poddId);
+                var filter = Builders<Podd>.Filter.Eq(p => p.Id, poddId); 
                 var update = Builders<Podd>.Update.Set(p => p.KategoriId, kategoriId);
 
-                await _poddar.UpdateOneAsync(filter, update);
+                await _poddar.UpdateOneAsync(session, filter, update);
+                await session.CommitTransactionAsync(); 
             }
             catch (Exception ex)
             {
+                await session.AbortTransactionAsync();
                 throw new Exception("Fel vid uppdatering av poddens kategori.", ex);
             }
         }
 
         public async Task UppdateraPodd(Podd podd)
         {
+            using var session = await _client.StartSessionAsync();
+            session.StartTransaction();
+
             try
             {
                 var filter = Builders<Podd>.Filter.Eq(p => p.Id, podd.Id);
-                await _poddar.ReplaceOneAsync(filter, podd);
+
+                await _poddar.ReplaceOneAsync(session, filter, podd);
+                await session.CommitTransactionAsync();
             }
             catch (Exception ex)
             {
+                await session.AbortTransactionAsync();
                 throw new Exception("Fel vid uppdatering av podd i databasen.", ex);
             }
         }
 
         public async Task TabortPodd(string id) // ta bort en podd gennom id
         {
+            using var session = await _client.StartSessionAsync();
+            session.StartTransaction();
+
             try
             {
                 var filter = Builders<Podd>.Filter.Eq(p => p.Id, id);
-                await _poddar.DeleteOneAsync(filter);
+
+                await _poddar.DeleteOneAsync(session, filter);
+                await session.CommitTransactionAsync();
+
             }
             catch (Exception ex)
             {
+                await session.AbortTransactionAsync();
                 throw new Exception("Fel vid borttagning av podd i databasen.", ex);
             }
         }

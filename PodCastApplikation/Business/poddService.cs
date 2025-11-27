@@ -11,13 +11,14 @@ using System.Threading.Tasks;
 
 namespace PodCastApplikation.Business.Validation;
 
+// Validator för poddar
 public class PoddService : IPoddService
 {
     private readonly IRssHämtare _rssHämtare;
     private readonly IPoddRepository _poddRepository;
     private readonly IKategoriRepository _kategoriRepository;
 
-
+// konstruktor
     public PoddService(IRssHämtare rssHämtare, IPoddRepository poddRepository, IKategoriRepository kategoriRepository)
     {
         _rssHämtare = rssHämtare;
@@ -26,43 +27,38 @@ public class PoddService : IPoddService
    
     }
 
-    // Metod för att lägga till ett nytt poddflöde
+    // Metod för att lägga till en podd via RSS-URL
     public async Task LäggTillPodd(string rssUrl)
     {
         try
         {
-            //1. Kolla att RSSlänk är giltig
-            RssValidator.ValideraRssUrl(rssUrl);
-            await RssValidator.ValideraRssInnehålle(rssUrl);
-            
-            //Hämta alla poddar och kolla så länken inte finns redan
             var allaPoddar = await _poddRepository.HämtaAllaPoddar();
             if (!PoddValidator.ÄrUnikRssUrl(rssUrl, allaPoddar))
                 throw new InvalidOperationException("Podden finns redan i systemet.");
 
-
-            //Hämtar podden via RSS och skapar podden
-             var podd = await _rssHämtare.HämtaPoddFrånRssUrl(rssUrl);
-            //sparar podden i databas
+            var podd = await _rssHämtare.HämtaPoddFrånRssUrl(rssUrl);
             await _poddRepository.SparaPodd(podd);
         }
-        catch(Exception ex)
+        catch (InvalidOperationException)
         {
-            // Ger UI - lagret mer info om vad som gick fel
-            throw new Exception("fel i PoddService.LäggTillPodd - kunde inte lägga till podd.", ex);
-        }   
-        
+            throw;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Kunde inte lägga till podd. Kontrollera att RSS-länken är korrekt.", ex);
+        }
+
     }
 
-                                                        // Metod för att hämta alla poddflöden
+    // Metod för att hämta alla poddar
     public async Task<List<Podd>> HämtaAllaPoddar()
     {
         var allaPoddar = await _poddRepository.HämtaAllaPoddar();
         return allaPoddar;
-                                                            // return await _poddRepository.HämtaAllaPoddar();
+                                                           
     }
 
-                                                            // Metod för att hämta alla avsnitt för ett specifikt poddflöde
+    // Metod för att hämta avsnitt för en specifik podd
     public async Task<List<Avsnitt>> HämtaAvsnittFörPodd(string poddId)
     {
         var podd = await _poddRepository.HämtaPoddMedId(poddId);
@@ -74,7 +70,7 @@ public class PoddService : IPoddService
         return podd.Avsnitt;
     }
 
-    // Metod för att uppdatera poddflödets namn
+    // Metod för att uppdatera poddnamn
     public async Task UppdateraPoddNamn(string poddId, string nyttNamn)
     {
         if (string.IsNullOrWhiteSpace(nyttNamn) || nyttNamn.Length < 2 || nyttNamn.Length > 50)
@@ -93,7 +89,8 @@ public class PoddService : IPoddService
 
         await _poddRepository.UppdateraPodd(podd);
     }
-    
+
+    // Metod för att ta bort en podd
     public async Task TaBortPodd(string poddId)
     {
         if (string.IsNullOrWhiteSpace(poddId))
