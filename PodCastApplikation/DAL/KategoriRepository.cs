@@ -34,18 +34,55 @@ namespace PodCastApplikation.DAL
 
         public async Task UppdateraKategori(Kategori kategori)
         {
-            var filter = Builders<Kategori>.Filter.Eq(k => k.Id, kategori.Id);
-            await _kategorier.ReplaceOneAsync(filter, kategori);
+            using var session = await _client.StartSessionAsync();
+            session.StartTransaction();
+            try
+            {
+                var filter = Builders<Kategori>.Filter.Eq(k => k.Id, kategori.Id);
+
+                await _kategorier.ReplaceOneAsync(filter, kategori);
+                await session.CommitTransactionAsync();
+            }
+            catch (Exception ex)
+            {
+                await session.AbortTransactionAsync();
+                throw new Exception("Ett fel uppstod vid uppdateringen av kategorin.", ex);
+            }
+
         }
 
         public async Task TaBortKategori(string id)
         {
-            var filter = Builders<Kategori>.Filter.Eq(k => k.Id, id);
-            await _kategorier.DeleteOneAsync(filter);
+            using var session = await _client.StartSessionAsync();
+            session.StartTransaction();
+            try
+            {
+                var filter = Builders<Kategori>.Filter.Eq(k => k.Id, id);
+
+                await _kategorier.DeleteOneAsync(filter);
+                await session.CommitTransactionAsync();
+            }
+            catch (Exception ex)
+            {
+                await session.AbortTransactionAsync();
+                throw new Exception("Ett fel uppstod vid borttagningen av kategorin.", ex);
+            }
         }
         public async Task SparaKategori(Kategori kategori)
         {
-            await _kategorier.InsertOneAsync(kategori);
+            using var session = await _client.StartSessionAsync();
+            session.StartTransaction();
+            try
+            {
+                await _kategorier.InsertOneAsync(session, kategori);
+                await session.CommitTransactionAsync();
+            }
+            catch (Exception ex)
+            {
+                await session.AbortTransactionAsync();
+                throw new Exception("Ett fel uppstod vid sparandet av kategorin.", ex);
+            }
+
         }
     }
 }
