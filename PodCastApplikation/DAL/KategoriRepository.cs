@@ -30,8 +30,6 @@ namespace PodCastApplikation.DAL
             return lista;
         }
 
-     
-
         public async Task UppdateraKategori(Kategori kategori)
         {
             using var session = await _client.StartSessionAsync();
@@ -68,6 +66,7 @@ namespace PodCastApplikation.DAL
                 throw new Exception("Ett fel uppstod vid borttagningen av kategorin.", ex);
             }
         }
+
         public async Task SparaKategori(Kategori kategori)
         {
             using var session = await _client.StartSessionAsync();
