@@ -53,7 +53,33 @@ public class PoddService : IPoddService
 
     }
 
-    
+    public async Task<Podd> LäggTillPoddMedKategori(string rssUrl, string kategoriId)
+    {
+        try
+        {
+
+            RssValidator.ValideraRssUrl(rssUrl);
+            await RssValidator.ValideraRssInnehålle(rssUrl);
+
+            var allaPoddar = await _poddRepository.HämtaAllaPoddar();
+            if (!PoddValidator.ÄrUnikRssUrl(rssUrl, allaPoddar))
+                throw new InvalidOperationException("Podden finns redan i systemet.");
+
+            var podd = await _rssHämtare.HämtaPoddFrånRssUrl(rssUrl);
+            podd.KategoriId = kategoriId;
+
+            await _poddRepository.SparaPodd(podd);
+
+            return podd;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Kunde inte lägga till podd. Kontrollera att RSS-länken och kategorin är korrekta.", ex);
+        }
+    }
+
+
+
     public async Task<List<Podd>> HämtaAllaPoddar()
     {
         var allaPoddar = await _poddRepository.HämtaAllaPoddar();
@@ -88,7 +114,7 @@ public class PoddService : IPoddService
             throw new KeyNotFoundException("Podd med angivet ID hittades inte.");
         }
 
-        podd.OriginalTitel = nyttNamn;
+        podd.AnvändarTitel = nyttNamn;
 
         await _poddRepository.UppdateraPodd(podd);
     }

@@ -19,5 +19,7 @@ namespace PodCastApplikation.Business
         Task UppdateraKategori(string kategoriId, string nyttNamn);
         Task TaBortKategori(string kategoriId);
         Task<List<Kategori>> HämtaAllaKategorier();
+        Task<Podd> LäggTillPoddMedKategori(string rssUrl, string kategoriId);
+
     }
 }

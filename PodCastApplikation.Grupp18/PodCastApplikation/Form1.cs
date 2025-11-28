@@ -1,10 +1,10 @@
-﻿using System;
+﻿using PodCastApplikation.Business;
+using PodCastApplikation.Business.Validation;
+using PodCastApplikation.Models.Klasser;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
-using PodCastApplikation.Business;
-using PodCastApplikation.Models.Klasser;
 
 namespace PodCastApplikation
 {
@@ -34,21 +34,57 @@ namespace PodCastApplikation
 
 
 
-        // PODDAR
-        private async void BtnLaggTillPodd_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                string rssUrl = txtRssLank.Text;
-                await _service.LäggTillPodd(rssUrl);
-                MessageBox.Show("Podd tillagd");
+      
+            private async void BtnLaggTillPodd_Click(object sender, EventArgs e)
+             {
+              try
+              {
+
+                string rssUrl = txtRssLank.Text?.Trim();
+
+
+                RssValidator.ValideraRssUrl(rssUrl);
+
+                await RssValidator.ValideraRssInnehålle(rssUrl);
+
+                // 🔹 4. Hämta alla kategorier från databasen (via service-lagret)
+                var kategorier = await _service.HämtaAllaKategorier();
+
+                var valdKategori = cmbValjKategori.SelectedItem != null ? kategorier.FirstOrDefault(k => k.Namn == cmbValjKategori.SelectedItem.ToString()) : null;
+
+                if (valdKategori == null)
+                {
+                    valdKategori = kategorier.FirstOrDefault(k =>
+                        k.Namn.Equals("AllaPoddar", StringComparison.OrdinalIgnoreCase));
+
+                    if (valdKategori == null)
+                    {
+                        await _service.LäggTillKategori("AllaPoddar");
+                        kategorier = await _service.HämtaAllaKategorier();
+                        valdKategori = kategorier.First(k =>
+                            k.Namn.Equals("AllaPoddar", StringComparison.OrdinalIgnoreCase));
+
+                    }
+                }
+                // 5️⃣ Lägg till podden i vald kategori
+                var nyPodd = await _service.LäggTillPoddMedKategori(rssUrl, valdKategori.Id);
+
+                MessageBox.Show($"Podd '{nyPodd.OriginalTitel}' tillagd i kategorin '{valdKategori.Namn}'.");
                 await LaddaAllaPoddar();
+            }
+            catch (ArgumentException ex)
+            {
+                MessageBox.Show($"Fel i RSS-länken: {ex.Message}");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show($"Fel vid tillägg av podd: {ex.Message}");
             }
+
         }
+
+
+       
 
         private async void BtnVisaAlla_Click(object sender, EventArgs e)
         {
@@ -68,9 +104,12 @@ namespace PodCastApplikation
             var poddar = await _service.HämtaAllaPoddar();
             _visadePoddar = poddar;
             lstPoddar.Items.Clear();
+            Console.WriteLine("=== Laddade poddar ===");
 
             foreach (var podd in poddar)
             {
+                Console.WriteLine($"Titel: {podd.OriginalTitel}, ID: '{podd.Id}'");
+                
                 lstPoddar.Items.Add(podd.OriginalTitel);
             }
         }
@@ -94,8 +133,12 @@ namespace PodCastApplikation
                 {
                     return; //avbryt om användaren klickar nej 
                 }
+                Console.WriteLine($"Försöker ta bort podd med ID: '{valdPodd.Id}' och titel: {valdPodd.OriginalTitel}");
+
 
                 await _service.TaBortPodd(valdPodd.Id);
+                await LaddaAllaPoddar();
+                lstPoddar.ClearSelected();
 
                 MessageBox.Show("Podd raderad.");
                 await LaddaAllaPoddar();
@@ -152,6 +195,7 @@ namespace PodCastApplikation
                 }
 
                 string nyttNamn = txtNyttNamn.Text;
+
                 if (string.IsNullOrWhiteSpace(nyttNamn))
                 {
                     MessageBox.Show("Ange ett giltigt namn.");
@@ -159,6 +203,15 @@ namespace PodCastApplikation
                 }
 
                 var valdPodd = _visadePoddar[lstPoddar.SelectedIndex];
+
+                var confirm = MessageBox.Show($"Vill du byta namn på '{valdPodd.OriginalTitel}' till '{nyttNamn}'?",
+            "Bekräfta namnbyte",
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+
+                if (confirm != DialogResult.Yes)
+                    return;
+               
                 await _service.UppdateraPoddNamn(valdPodd.Id, nyttNamn);
 
                 MessageBox.Show("Namn ändrat.");
@@ -204,27 +257,65 @@ namespace PodCastApplikation
 
         private async Task LaddaKategorier()
         {
-            var kategorier = await _service.HämtaAllaKategorier();
-
-            cmbValjKategori.Items.Clear();
-            cmbFiltreraKategori.Items.Clear();
-
-           
-
-            foreach (var kategori in kategorier)
+            try
             {
-                cmbValjKategori.Items.Add(kategori.Namn);
-                cmbFiltreraKategori.Items.Add(kategori.Namn);
+                var kategorier = await _service.HämtaAllaKategorier();
+
+                kategorier = kategorier.OrderByDescending(k => k.Namn.Equals("AllaPoddar", StringComparison
+                    .OrdinalIgnoreCase)).ThenBy(k => k.Namn).ToList();
+
+                cmbValjKategori.Items.Clear();
+                cmbFiltreraKategori.Items.Clear();
+
+
+
+                foreach (var kategori in kategorier)
+                {
+                    cmbValjKategori.Items.Add(kategori.Namn);
+                    cmbFiltreraKategori.Items.Add(kategori.Namn);
+                }
+
+                if (cmbValjKategori.Items.Count > 0)
+                    cmbValjKategori.SelectedIndex = 0;
+
+                if (cmbFiltreraKategori.Items.Count > 0)
+                    cmbFiltreraKategori.SelectedIndex = 0;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Fel vid laddning av kategorier: {ex.Message}");
             }
 
-            if (cmbValjKategori.Items.Count > 0)
-                cmbValjKategori.SelectedIndex = 0;
 
-            if (cmbFiltreraKategori.Items.Count > 0)
-                cmbFiltreraKategori.SelectedIndex = 0;
+        }
+            
 
           
+        
+
+        private async Task KontrolleraStandardKategori()
+        {
+            try
+            {
+                var kategorier = await _service.HämtaAllaKategorier();
+
+                // Finns "AllaPoddar" redan?
+                var finns = kategorier.Any(k =>
+                    k.Namn.Equals("AllaPoddar", StringComparison.OrdinalIgnoreCase));
+
+                if (!finns)
+                {
+                    await _service.LäggTillKategori("AllaPoddar");
+                    await LaddaKategorier();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Kunde inte kontrollera eller skapa standardkategori: {ex.Message}");
+            }
         }
+
 
 
         //private async Task LaddaKategorier() { var kategorier = await _service.HämtaAllaKategorier(); cmbValjKategori.Items.Clear(); cmbFiltreraKategori.Items.Clear(); cmbFiltreraKategori.Items.Add("Alla poddar"); foreach (var kategori in kategorier) { cmbValjKategori.Items.Add(kategori.Namn); cmbFiltreraKategori.Items.Add(kategori.Namn); } if (cmbValjKategori.Items.Count > 0) cmbValjKategori.SelectedIndex = 0; if (cmbFiltreraKategori.Items.Count > 0) cmbFiltreraKategori.SelectedIndex = 0; cmbFiltreraKategori.SelectedIndex = 0; }
@@ -274,91 +365,18 @@ namespace PodCastApplikation
             }
         }
 
-        //private async void CmbFiltreraKategori_SelectedIndexChanged(object sender, EventArgs e)
-        //{
-        //    try
-        //    {
-        //        var poddar = await _service.HämtaAllaPoddar();
-        //        var kategorier = await _service.HämtaAllaKategorier();
-
-        //        // Om användaren valt "Alla poddar" (första i listan)
-        //        if (cmbFiltreraKategori.SelectedIndex == 0)
-        //        {
-        //            _visadePoddar = poddar;
-        //        }
-        //        else
-        //        {
-        //            // Justera index -1 eftersom "Alla poddar" ligger först
-        //            var valdKategori = kategorier[cmbFiltreraKategori.SelectedIndex - 1];
-
-        //            _visadePoddar = poddar
-        //                .Where(p => p.KategoriId == valdKategori.Id)
-        //                .ToList();
-        //        }
-
-        //        lstPoddar.Items.Clear();
-
-        //        var allaKategorier = await _service.HämtaAllaKategorier();
-        //        foreach (var p in _visadePoddar)
-        //        {
-        //            var kategori = allaKategorier.FirstOrDefault(k => k.Id == p.KategoriId);
-        //            var kategoriNamn = kategori != null ? kategori.Namn : "Ingen kategori";
-        //            lstPoddar.Items.Add($"{p.OriginalTitel} – {kategoriNamn}");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"Fel vid filtrering: {ex.Message}");
-        //    }
-        //}
+     
 
 
 
         private async void Form1_Load(object sender, EventArgs e)
         {
+            await KontrolleraStandardKategori();
             await LaddaKategorier();
             await LaddaAllaPoddar();
         }
 
-        private void btnVisaAlla_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnVisaAvsnitt_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtNyttNamn_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnVisaAvsnitt_Click_2(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnBytNamnPodd_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lstPoddar_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtRssLank_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtBeskrivning_TextChanged(object sender, EventArgs e)
-        {
-
-        }
+        
     }
 
 }       

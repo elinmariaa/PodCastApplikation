@@ -7,6 +7,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace PodCastApplikation.Models.Klasser
 {
+    [BsonIgnoreExtraElements]
     public class Podd
     {
         [BsonId] 
