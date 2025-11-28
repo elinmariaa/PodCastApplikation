@@ -27,11 +27,14 @@ public class PoddService : IPoddService
    
     }
 
-    // Metod för att lägga till en podd via RSS-URL
+    
     public async Task LäggTillPodd(string rssUrl)
     {
         try
         {
+            RssValidator.ValideraRssUrl(rssUrl);
+            await RssValidator.ValideraRssInnehålle(rssUrl);
+
             var allaPoddar = await _poddRepository.HämtaAllaPoddar();
             if (!PoddValidator.ÄrUnikRssUrl(rssUrl, allaPoddar))
                 throw new InvalidOperationException("Podden finns redan i systemet.");
@@ -50,7 +53,7 @@ public class PoddService : IPoddService
 
     }
 
-    // Metod för att hämta alla poddar
+    
     public async Task<List<Podd>> HämtaAllaPoddar()
     {
         var allaPoddar = await _poddRepository.HämtaAllaPoddar();
@@ -58,7 +61,7 @@ public class PoddService : IPoddService
                                                            
     }
 
-    // Metod för att hämta avsnitt för en specifik podd
+    
     public async Task<List<Avsnitt>> HämtaAvsnittFörPodd(string poddId)
     {
         var podd = await _poddRepository.HämtaPoddMedId(poddId);
@@ -70,7 +73,7 @@ public class PoddService : IPoddService
         return podd.Avsnitt;
     }
 
-    // Metod för att uppdatera poddnamn
+    
     public async Task UppdateraPoddNamn(string poddId, string nyttNamn)
     {
         if (string.IsNullOrWhiteSpace(nyttNamn) || nyttNamn.Length < 2 || nyttNamn.Length > 50)
@@ -90,7 +93,7 @@ public class PoddService : IPoddService
         await _poddRepository.UppdateraPodd(podd);
     }
 
-    // Metod för att ta bort en podd
+    
     public async Task TaBortPodd(string poddId)
     {
         if (string.IsNullOrWhiteSpace(poddId))

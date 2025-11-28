@@ -87,6 +87,14 @@ namespace PodCastApplikation
 
                 var valdPodd = _visadePoddar[lstPoddar.SelectedIndex];
 
+                var result = MessageBox.Show($"Vill du verklilgen ta bort podden '{valdPodd.OriginalTitel}'?",
+                    "Bekräfta borttagning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (result !=DialogResult.Yes)
+                {
+                    return; //avbryt om användaren klickar nej 
+                }
+
                 await _service.TaBortPodd(valdPodd.Id);
 
                 MessageBox.Show("Podd raderad.");
