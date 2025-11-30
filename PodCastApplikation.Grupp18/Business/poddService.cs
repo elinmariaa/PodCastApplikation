@@ -53,6 +53,13 @@ public class PoddService : IPoddService
 
     }
 
+    public async Task<Podd> FörhandsgranskaPodd(string rssUrl)
+    {
+        RssValidator.ValideraRssUrl(rssUrl);
+        await RssValidator.ValideraRssInnehålle(rssUrl);
+        return await _rssHämtare.HämtaPoddFrånRssUrl(rssUrl);
+    }
+
     public async Task<Podd> LäggTillPoddMedKategori(string rssUrl, string kategoriId)
     {
         try
@@ -137,23 +144,7 @@ public class PoddService : IPoddService
         await _poddRepository.TabortPodd(poddId);
     }
 
-    // Metod för att uppdatera poddflödets kategori
-    public async Task UppdateraPoddKategori(string poddId, string nyKategoriId)
-    {
-        if (string.IsNullOrWhiteSpace(nyKategoriId))
-            throw new ArgumentException("Kategori-ID får inte vara tomt.");
-
-        var kategoriLista = await _kategoriRepository.HämtaAllaKategorier();
-        var kategori = kategoriLista.FirstOrDefault(k => k.Id == nyKategoriId);
-
-        if (kategori == null)
-            throw new InvalidOperationException("Kategorin kunde inte hittas.");
-
-        await _poddRepository.UppdateraPoddKategori(poddId, nyKategoriId);
-    }
-
-
-    // Metod för att lägga till en ny kategori
+    
     public async Task LäggTillKategori(string namn)
     {
         try
@@ -186,37 +177,37 @@ public class PoddService : IPoddService
            }
     }
 
-    // Metod för att uppdatera en kategoris namn
-    public async Task UppdateraKategori(string kategoriId, string nyttNamn)
-    {
-        if (string.IsNullOrWhiteSpace(nyttNamn) || nyttNamn.Trim().Length < 2 || nyttNamn.Trim().Length > 50)
-        {
-            throw new ArgumentException("Det angivna kategorinamnet är ogiltigt.");
-        }
-        var allaKategorier = await _kategoriRepository.HämtaAllaKategorier();
+   
+    //public async Task UppdateraKategori(string kategoriId, string nyttNamn)
+    //{
+    //    if (string.IsNullOrWhiteSpace(nyttNamn) || nyttNamn.Trim().Length < 2 || nyttNamn.Trim().Length > 50)
+    //    {
+    //        throw new ArgumentException("Det angivna kategorinamnet är ogiltigt.");
+    //    }
+    //    var allaKategorier = await _kategoriRepository.HämtaAllaKategorier();
        
-        var kategori = allaKategorier
-            .FirstOrDefault(k => k.Id == kategoriId);
+    //    var kategori = allaKategorier
+    //        .FirstOrDefault(k => k.Id == kategoriId);
 
-        if (kategori == null)
-        {
-            throw new KeyNotFoundException("Kategorin med angivet ID hittades inte.");
-        }
+    //    if (kategori == null)
+    //    {
+    //        throw new KeyNotFoundException("Kategorin med angivet ID hittades inte.");
+    //    }
        
-        bool finnsRedan = allaKategorier
-            .Any(k => k.Namn.Equals(nyttNamn, StringComparison.OrdinalIgnoreCase) && k.Id != kategoriId);
+    //    bool finnsRedan = allaKategorier
+    //        .Any(k => k.Namn.Equals(nyttNamn, StringComparison.OrdinalIgnoreCase) && k.Id != kategoriId);
        
-        if (finnsRedan)
-        {
-            throw new InvalidOperationException("En annan kategori med samma namn finns redan i systemet.");
-        }
+    //    if (finnsRedan)
+    //    {
+    //        throw new InvalidOperationException("En annan kategori med samma namn finns redan i systemet.");
+    //    }
         
-        kategori.Namn = nyttNamn;
+    //    kategori.Namn = nyttNamn;
        
-        await _kategoriRepository.UppdateraKategori(kategori);
-    }
+    //    await _kategoriRepository.UppdateraKategori(kategori);
+    //}
 
-    // Metod för att ta bort en kategori
+    
     public async Task TaBortKategori(string kategoriId)
     {
         if (string.IsNullOrWhiteSpace(kategoriId))
@@ -245,7 +236,7 @@ public class PoddService : IPoddService
         await _kategoriRepository.TaBortKategori(kategoriId);
     }
 
-    // Metod för att hämta alla kategorier
+    
     public async Task <List<Kategori>> HämtaAllaKategorier()
     {
         return await _kategoriRepository.HämtaAllaKategorier();

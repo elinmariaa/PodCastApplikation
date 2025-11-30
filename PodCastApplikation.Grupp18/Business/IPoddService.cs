@@ -11,15 +11,19 @@ namespace PodCastApplikation.Business
         Task<List<Podd>> HämtaAllaPoddar();
         Task<List<Avsnitt>> HämtaAvsnittFörPodd(string poddId);
         Task UppdateraPoddNamn(string poddId, string nyttNamn);
-        Task UppdateraPoddKategori(string poddId, string nyKategoriId);
+        // UppdateraPoddKategori(string poddId, string nyKategoriId);
         Task TaBortPodd(string poddId);
+        Task<Podd> FörhandsgranskaPodd(string rssUrl);
+
 
         // KATEGORIER
         Task LäggTillKategori(string namn);
-        Task UppdateraKategori(string kategoriId, string nyttNamn);
+        //Task UppdateraKategori(string kategoriId, string nyttNamn);
         Task TaBortKategori(string kategoriId);
         Task<List<Kategori>> HämtaAllaKategorier();
         Task<Podd> LäggTillPoddMedKategori(string rssUrl, string kategoriId);
+        
+
 
     }
 }

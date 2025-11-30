@@ -19,8 +19,15 @@ namespace PodCastApplikation.Business.Validation
         // Kollar att rssUrl är unik bland befintliga poddar
         public static bool ÄrUnikRssUrl(string rssUrl, List<Models.Klasser.Podd> befintligaPoddar)
         {
-            return !befintligaPoddar
-                .Any(p => p.RssURL.Equals(rssUrl, StringComparison.OrdinalIgnoreCase));
+            if (string.IsNullOrWhiteSpace(rssUrl))
+                return false;
+
+            string jämförUrl = rssUrl.Trim().TrimEnd('/');
+
+            return !befintligaPoddar.Any(p =>
+       !string.IsNullOrWhiteSpace(p.RssURL) &&
+       p.RssURL.Trim().TrimEnd('/')
+           .Equals(jämförUrl, StringComparison.OrdinalIgnoreCase));
         }
 
         // Kollar att poddId inte är tomt eller null

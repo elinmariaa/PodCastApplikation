@@ -45,7 +45,7 @@ namespace PodCastApplikation
 
             // Kategori-funktioner
             btnSkapaKategori.Click += BtnSkapaKategori_Click;
-            btnBytKategoriNamn.Click += BtnBytKategoriNamn_Click;
+            
             btnRaderaKategori.Click += BtnRaderaKategori_Click;
             btnSortera.Click += BtnSortera_Click;
             btnVisaSparade.Click += BtnVisaSparade_Click;
@@ -121,36 +121,36 @@ namespace PodCastApplikation
             }
         }
 
-        private async void BtnBytKategoriNamn_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (lstKategorier.SelectedItem == null)
-                {
-                    MessageBox.Show("Välj en kategori först.");
-                    return;
-                }
+        //private async void BtnBytKategoriNamn_Click(object sender, EventArgs e)
+        //{
+        //    try
+        //    {
+        //        if (lstKategorier.SelectedItem == null)
+        //        {
+        //            MessageBox.Show("Välj en kategori först.");
+        //            return;
+        //        }
 
-                string nyttNamn = txtKategoriNamn.Text.Trim();
-                if (string.IsNullOrWhiteSpace(nyttNamn) || nyttNamn.Length < 2 || nyttNamn.Length > 50)
-                {
-                    MessageBox.Show("Ange ett giltigt kategorinamn (2-50 tecken).");
-                    return;
-                }
+        //        string nyttNamn = txtKategoriNamn.Text.Trim();
+        //        if (string.IsNullOrWhiteSpace(nyttNamn) || nyttNamn.Length < 2 || nyttNamn.Length > 50)
+        //        {
+        //            MessageBox.Show("Ange ett giltigt kategorinamn (2-50 tecken).");
+        //            return;
+        //        }
 
-                var kategorier = await _service.HämtaAllaKategorier();
-                var valdKategori = kategorier[lstKategorier.SelectedIndex];
+        //        var kategorier = await _service.HämtaAllaKategorier();
+        //        var valdKategori = kategorier[lstKategorier.SelectedIndex];
 
-                await _service.UppdateraKategori(valdKategori.Id, nyttNamn);
+        //        await _service.UppdateraKategori(valdKategori.Id, nyttNamn);
 
-                MessageBox.Show("Kategorin har uppdaterats!");
-                await LaddaKategorier();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Fel: " + ex.Message);
-            }
-        }
+        //        MessageBox.Show("Kategorin har uppdaterats!");
+        //        await LaddaKategorier();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show("Fel: " + ex.Message);
+        //    }
+        //}
 
         private async void BtnSortera_Click(object sender, EventArgs e)
         {
