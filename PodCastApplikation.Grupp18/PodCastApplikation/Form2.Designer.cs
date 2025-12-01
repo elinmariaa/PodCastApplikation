@@ -25,7 +25,6 @@
             txtKategoriNamn = new TextBox();
             lstKategorier = new ListBox();
             btnSkapaKategori = new Button();
-            btnBytKategoriNamn = new Button();
             btnRaderaKategori = new Button();
             btnSortera = new Button();
             btnVisaSparade = new Button();
@@ -35,15 +34,14 @@
             // 
             txtKategoriNamn.Location = new Point(28, 29);
             txtKategoriNamn.Name = "txtKategoriNamn";
-            txtKategoriNamn.Size = new Size(200, 39);
+            txtKategoriNamn.Size = new Size(200, 31);
             txtKategoriNamn.TabIndex = 0;
-            txtKategoriNamn.TextChanged += txtKategoriNamn_TextChanged;
             // 
             // lstKategorier
             // 
             lstKategorier.Location = new Point(28, 83);
             lstKategorier.Name = "lstKategorier";
-            lstKategorier.Size = new Size(200, 228);
+            lstKategorier.Size = new Size(200, 204);
             lstKategorier.TabIndex = 1;
             lstKategorier.SelectedIndexChanged += lstKategorier_SelectedIndexChanged;
             // 
@@ -57,22 +55,12 @@
             btnSkapaKategori.Text = "Skapa";
             btnSkapaKategori.UseVisualStyleBackColor = false;
             // 
-            // btnBytKategoriNamn
-            // 
-            btnBytKategoriNamn.BackColor = Color.White;
-            btnBytKategoriNamn.Location = new Point(234, 122);
-            btnBytKategoriNamn.Name = "btnBytKategoriNamn";
-            btnBytKategoriNamn.Size = new Size(159, 42);
-            btnBytKategoriNamn.TabIndex = 3;
-            btnBytKategoriNamn.Text = "Byt namn";
-            btnBytKategoriNamn.UseVisualStyleBackColor = false;
-            // 
             // btnRaderaKategori
             // 
             btnRaderaKategori.BackColor = Color.White;
-            btnRaderaKategori.Location = new Point(234, 215);
+            btnRaderaKategori.Location = new Point(234, 175);
             btnRaderaKategori.Name = "btnRaderaKategori";
-            btnRaderaKategori.Size = new Size(133, 47);
+            btnRaderaKategori.Size = new Size(159, 47);
             btnRaderaKategori.TabIndex = 4;
             btnRaderaKategori.Text = "Radera";
             btnRaderaKategori.UseVisualStyleBackColor = false;
@@ -81,7 +69,7 @@
             // btnSortera
             // 
             btnSortera.BackColor = Color.White;
-            btnSortera.Location = new Point(234, 167);
+            btnSortera.Location = new Point(234, 127);
             btnSortera.Name = "btnSortera";
             btnSortera.Size = new Size(159, 42);
             btnSortera.TabIndex = 6;
@@ -91,11 +79,11 @@
             // btnVisaSparade
             // 
             btnVisaSparade.BackColor = Color.White;
-            btnVisaSparade.Location = new Point(28, 317);
+            btnVisaSparade.Location = new Point(234, 228);
             btnVisaSparade.Name = "btnVisaSparade";
-            btnVisaSparade.Size = new Size(210, 40);
+            btnVisaSparade.Size = new Size(159, 59);
             btnVisaSparade.TabIndex = 9;
-            btnVisaSparade.Text = "Visa sparade data";
+            btnVisaSparade.Text = "Visa alla kategorier";
             btnVisaSparade.UseVisualStyleBackColor = false;
             // 
             // Form2
@@ -105,7 +93,6 @@
             Controls.Add(txtKategoriNamn);
             Controls.Add(lstKategorier);
             Controls.Add(btnSkapaKategori);
-            Controls.Add(btnBytKategoriNamn);
             Controls.Add(btnRaderaKategori);
             Controls.Add(btnSortera);
             Controls.Add(btnVisaSparade);
@@ -122,8 +109,6 @@
         private ListBox lstKategorier;
 
         private Button btnSkapaKategori;
-
-        private Button btnBytKategoriNamn;
 
         private Button btnRaderaKategori;
 

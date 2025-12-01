@@ -68,21 +68,39 @@ namespace PodCastApplikation
             {
                 string namn = txtKategoriNamn.Text;
 
-                if (namn == "Ny kategori")
+               
+                if (string.IsNullOrWhiteSpace(namn) || namn == "Nytt namn")
                 {
-                    MessageBox.Show("Ange ett kategori-namn.");
+                    MessageBox.Show("Ange ett giltigt kategorinamn innan du sparar.");
                     return;
                 }
 
+                // 🔹 2. Kontrollera om kategorin redan finns (case-insensitive)
+                var befintliga = await _service.HämtaAllaKategorier();
+                bool finnsRedan = befintliga.Any(k =>
+                    k.Namn.Equals(namn, StringComparison.OrdinalIgnoreCase));
+
+                if (finnsRedan)
+                {
+                    MessageBox.Show($"Kategorin '{namn}' finns redan.");
+                    return;
+                }
+
+                // 🔹 3. Spara kategorin
                 await _service.LäggTillKategori(namn);
-                MessageBox.Show("Kategori tillagd!");
+                MessageBox.Show($"Kategorin '{namn}' har lagts till!");
+
+                txtKategoriNamn.Text = "Nytt namn";
+                txtKategoriNamn.ForeColor = Color.Gray;
+
                 await LaddaKategorier();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show($"Fel: {ex.Message}");
             }
         }
+
 
         private async void BtnRaderaKategori_Click(object sender, EventArgs e)
         {
@@ -121,36 +139,7 @@ namespace PodCastApplikation
             }
         }
 
-        //private async void BtnBytKategoriNamn_Click(object sender, EventArgs e)
-        //{
-        //    try
-        //    {
-        //        if (lstKategorier.SelectedItem == null)
-        //        {
-        //            MessageBox.Show("Välj en kategori först.");
-        //            return;
-        //        }
-
-        //        string nyttNamn = txtKategoriNamn.Text.Trim();
-        //        if (string.IsNullOrWhiteSpace(nyttNamn) || nyttNamn.Length < 2 || nyttNamn.Length > 50)
-        //        {
-        //            MessageBox.Show("Ange ett giltigt kategorinamn (2-50 tecken).");
-        //            return;
-        //        }
-
-        //        var kategorier = await _service.HämtaAllaKategorier();
-        //        var valdKategori = kategorier[lstKategorier.SelectedIndex];
-
-        //        await _service.UppdateraKategori(valdKategori.Id, nyttNamn);
-
-        //        MessageBox.Show("Kategorin har uppdaterats!");
-        //        await LaddaKategorier();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show("Fel: " + ex.Message);
-        //    }
-        //}
+       
 
         private async void BtnSortera_Click(object sender, EventArgs e)
         {

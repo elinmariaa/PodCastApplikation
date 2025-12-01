@@ -25,8 +25,6 @@
         private Button btnOppenKategoriFonster;
         private TextBox txtRssLank;
         private ListBox lstSparadePoddar;
-
-        private Label lblPreviewTitelRubrik;
         
         private TextBox txtPreviewTitel;
         private TextBox txtPreviewBeskrivning;
@@ -45,13 +43,10 @@
             txtTitel = new TextBox();
             txtDatum = new TextBox();
             txtBeskrivning = new TextBox();
-           
             lstAvsnitt = new ListBox();
             txtRssLank = new TextBox();
             btnForhandsgranska = new Button();
-          
             btnRaderaPodd = new Button();
-           
             btnSparaPrenumerera = new Button();
             txtNyttNamn = new TextBox();
             btnBytNamnPodd = new Button();
@@ -64,14 +59,13 @@
             lstSparadePoddar = new ListBox();
             label1 = new Label();
             label2 = new Label();
-            lblPreviewTitelRubrik = new Label();
             txtPreviewTitel = new TextBox();
             txtPreviewBeskrivning = new TextBox();
             SuspendLayout();
             // 
             // txtTitel
             // 
-            txtTitel.Location = new Point(1378, 59);
+            txtTitel.Location = new Point(1378, 147);
             txtTitel.Name = "txtTitel";
             txtTitel.PlaceholderText = "Titel avsnitt";
             txtTitel.ReadOnly = true;
@@ -80,28 +74,27 @@
             // 
             // txtDatum
             // 
-            txtDatum.Location = new Point(1378, 97);
+            txtDatum.Location = new Point(1378, 184);
             txtDatum.Name = "txtDatum";
             txtDatum.PlaceholderText = "Datum för avsnitt";
             txtDatum.ReadOnly = true;
-            txtDatum.Size = new Size(238, 31);
+            txtDatum.Size = new Size(299, 31);
             txtDatum.TabIndex = 1;
             // 
             // txtBeskrivning
             // 
             txtBeskrivning.ForeColor = SystemColors.InactiveCaption;
-            txtBeskrivning.Location = new Point(1378, 134);
+            txtBeskrivning.Location = new Point(1378, 221);
             txtBeskrivning.Multiline = true;
             txtBeskrivning.Name = "txtBeskrivning";
             txtBeskrivning.PlaceholderText = "Beskrivning av avsnitt...";
             txtBeskrivning.ReadOnly = true;
-            txtBeskrivning.Size = new Size(238, 305);
+            txtBeskrivning.Size = new Size(299, 305);
             txtBeskrivning.TabIndex = 2;
-            
             // 
             // lstAvsnitt
             // 
-            lstAvsnitt.Location = new Point(1047, 59);
+            lstAvsnitt.Location = new Point(1048, 147);
             lstAvsnitt.Name = "lstAvsnitt";
             lstAvsnitt.Size = new Size(325, 379);
             lstAvsnitt.TabIndex = 5;
@@ -113,64 +106,71 @@
             txtRssLank.Location = new Point(14, 59);
             txtRssLank.Name = "txtRssLank";
             txtRssLank.PlaceholderText = "Skriv in RSS-länk här....";
-            txtRssLank.Size = new Size(231, 31);
+            txtRssLank.Size = new Size(397, 31);
             txtRssLank.TabIndex = 3;
             // 
             // btnForhandsgranska
             // 
-            btnForhandsgranska.BackColor = Color.SteelBlue;
+            btnForhandsgranska.BackColor = Color.Transparent;
             btnForhandsgranska.Font = new Font("Segoe UI", 9F);
-            btnForhandsgranska.Location = new Point(249, 54);
+            btnForhandsgranska.Location = new Point(12, 98);
             btnForhandsgranska.Name = "btnForhandsgranska";
-            btnForhandsgranska.Size = new Size(163, 41);
+            btnForhandsgranska.Size = new Size(246, 43);
             btnForhandsgranska.TabIndex = 19;
             btnForhandsgranska.Text = "Förhandsgranska";
             btnForhandsgranska.UseVisualStyleBackColor = false;
-         //   btnForhandsgranska.Click += btnForhandsgranska_Click_1;
-           
+            // 
             // btnRaderaPodd
             // 
-            btnRaderaPodd.Location = new Point(573, 214);
+            btnRaderaPodd.BackColor = Color.Transparent;
+            btnRaderaPodd.Location = new Point(1300, 92);
             btnRaderaPodd.Name = "btnRaderaPodd";
-            btnRaderaPodd.Size = new Size(246, 38);
+            btnRaderaPodd.Size = new Size(246, 43);
             btnRaderaPodd.TabIndex = 8;
             btnRaderaPodd.Text = "Radera podd";
-            
+            btnRaderaPodd.UseVisualStyleBackColor = false;
+            // 
             // btnSparaPrenumerera
             // 
-            btnSparaPrenumerera.Location = new Point(8, 614);
+            btnSparaPrenumerera.BackColor = Color.Transparent;
+            btnSparaPrenumerera.Location = new Point(11, 560);
             btnSparaPrenumerera.Name = "btnSparaPrenumerera";
             btnSparaPrenumerera.Size = new Size(246, 43);
             btnSparaPrenumerera.TabIndex = 10;
             btnSparaPrenumerera.Text = "Spara podd";
-           
+            btnSparaPrenumerera.UseVisualStyleBackColor = false;
             // 
             // txtNyttNamn
             // 
-            txtNyttNamn.Location = new Point(264, 401);
+            txtNyttNamn.Location = new Point(11, 448);
             txtNyttNamn.Name = "txtNyttNamn";
-            txtNyttNamn.Size = new Size(246, 31);
+            txtNyttNamn.PlaceholderText = "Byt namn (valfritt)";
+            txtNyttNamn.Size = new Size(251, 31);
             txtNyttNamn.TabIndex = 11;
             // 
             // btnBytNamnPodd
             // 
-            btnBytNamnPodd.Location = new Point(264, 438);
+            btnBytNamnPodd.BackColor = Color.Transparent;
+            btnBytNamnPodd.Location = new Point(11, 498);
             btnBytNamnPodd.Name = "btnBytNamnPodd";
-            btnBytNamnPodd.Size = new Size(246, 45);
+            btnBytNamnPodd.Size = new Size(246, 43);
             btnBytNamnPodd.TabIndex = 12;
             btnBytNamnPodd.Text = "Byt namn";
+            btnBytNamnPodd.UseVisualStyleBackColor = false;
             // 
             // btnVisaAvsnitt
             // 
-            btnVisaAvsnitt.Location = new Point(573, 168);
+            btnVisaAvsnitt.BackColor = Color.Transparent;
+            btnVisaAvsnitt.Location = new Point(1048, 92);
             btnVisaAvsnitt.Name = "btnVisaAvsnitt";
-            btnVisaAvsnitt.Size = new Size(250, 40);
+            btnVisaAvsnitt.Size = new Size(246, 43);
             btnVisaAvsnitt.TabIndex = 13;
             btnVisaAvsnitt.Text = "Visa avsnitt";
+            btnVisaAvsnitt.UseVisualStyleBackColor = false;
             // 
             // lblValjKategori
             // 
-            lblValjKategori.Location = new Point(8, 345);
+            lblValjKategori.Location = new Point(11, 364);
             lblValjKategori.Name = "lblValjKategori";
             lblValjKategori.Size = new Size(200, 32);
             lblValjKategori.TabIndex = 14;
@@ -187,7 +187,7 @@
             // 
             // lblFiltreraKategori
             // 
-            lblFiltreraKategori.Location = new Point(573, 97);
+            lblFiltreraKategori.Location = new Point(829, 62);
             lblFiltreraKategori.Name = "lblFiltreraKategori";
             lblFiltreraKategori.Size = new Size(100, 34);
             lblFiltreraKategori.TabIndex = 16;
@@ -196,22 +196,25 @@
             // cmbFiltreraKategori
             // 
             cmbFiltreraKategori.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbFiltreraKategori.Location = new Point(573, 129);
+            cmbFiltreraKategori.Location = new Point(830, 98);
             cmbFiltreraKategori.Name = "cmbFiltreraKategori";
-            cmbFiltreraKategori.Size = new Size(250, 33);
+            cmbFiltreraKategori.Size = new Size(212, 33);
             cmbFiltreraKategori.TabIndex = 17;
             // 
             // btnOppenKategoriFonster
             // 
-            btnOppenKategoriFonster.Location = new Point(1472, 614);
+            btnOppenKategoriFonster.BackColor = Color.Transparent;
+            btnOppenKategoriFonster.Cursor = Cursors.IBeam;
+            btnOppenKategoriFonster.Location = new Point(1431, 572);
             btnOppenKategoriFonster.Name = "btnOppenKategoriFonster";
-            btnOppenKategoriFonster.Size = new Size(250, 40);
+            btnOppenKategoriFonster.Size = new Size(246, 43);
             btnOppenKategoriFonster.TabIndex = 18;
-            btnOppenKategoriFonster.Text = "Kategorier";
+            btnOppenKategoriFonster.Text = "Hantera Kategorier";
+            btnOppenKategoriFonster.UseVisualStyleBackColor = false;
             // 
             // lstSparadePoddar
             // 
-            lstSparadePoddar.Location = new Point(829, 59);
+            lstSparadePoddar.Location = new Point(830, 147);
             lstSparadePoddar.Name = "lstSparadePoddar";
             lstSparadePoddar.Size = new Size(212, 379);
             lstSparadePoddar.TabIndex = 20;
@@ -230,28 +233,18 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 14F);
-            label2.Location = new Point(829, 9);
+            label2.Location = new Point(826, 9);
             label2.Name = "label2";
             label2.Size = new Size(213, 38);
             label2.TabIndex = 22;
             label2.Text = "Sparade poddar";
             // 
-            // lblPreviewTitelRubrik
-            // 
-            lblPreviewTitelRubrik.AutoSize = true;
-            lblPreviewTitelRubrik.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lblPreviewTitelRubrik.ForeColor = Color.White;
-            lblPreviewTitelRubrik.Location = new Point(14, 94);
-            lblPreviewTitelRubrik.Name = "lblPreviewTitelRubrik";
-            lblPreviewTitelRubrik.Size = new Size(143, 28);
-            lblPreviewTitelRubrik.TabIndex = 0;
-            lblPreviewTitelRubrik.Text = "Titel på podd:";
-            // 
             // txtPreviewTitel
             // 
             txtPreviewTitel.BackColor = Color.White;
-            txtPreviewTitel.Location = new Point(14, 131);
+            txtPreviewTitel.Location = new Point(11, 147);
             txtPreviewTitel.Name = "txtPreviewTitel";
+            txtPreviewTitel.PlaceholderText = "PoddTitel";
             txtPreviewTitel.ReadOnly = true;
             txtPreviewTitel.Size = new Size(400, 31);
             txtPreviewTitel.TabIndex = 1;
@@ -259,7 +252,7 @@
             // txtPreviewBeskrivning
             // 
             txtPreviewBeskrivning.BackColor = Color.White;
-            txtPreviewBeskrivning.Location = new Point(14, 165);
+            txtPreviewBeskrivning.Location = new Point(11, 184);
             txtPreviewBeskrivning.Multiline = true;
             txtPreviewBeskrivning.Name = "txtPreviewBeskrivning";
             txtPreviewBeskrivning.PlaceholderText = "Beskrivning av podden...";
@@ -271,7 +264,6 @@
             // 
             BackColor = Color.SteelBlue;
             ClientSize = new Size(1734, 715);
-            Controls.Add(lblPreviewTitelRubrik);
             Controls.Add(txtPreviewTitel);
             Controls.Add(txtPreviewBeskrivning);
             Controls.Add(label2);
@@ -280,12 +272,9 @@
             Controls.Add(txtDatum);
             Controls.Add(txtBeskrivning);
             Controls.Add(txtRssLank);
-          
             Controls.Add(lstAvsnitt);
             Controls.Add(btnForhandsgranska);
-            
             Controls.Add(btnRaderaPodd);
-           
             Controls.Add(btnSparaPrenumerera);
             Controls.Add(txtNyttNamn);
             Controls.Add(btnBytNamnPodd);

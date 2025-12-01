@@ -25,7 +25,7 @@ namespace PodCastApplikation
             //btnLaggTillPodd.Click += BtnLaggTillPodd_Click;
             btnForhandsgranska.Click += BtnForhandsgranska_Click;
 
-          
+
             btnRaderaPodd.Click += BtnRaderaPodd_Click;
             btnSparaPrenumerera.Click += BtnSparaPodd_Click;
             btnBytNamnPodd.Click += BtnBytNamnPodd_Click;
@@ -77,7 +77,7 @@ namespace PodCastApplikation
                 txtRssLank.Text = "";
                 _senastFörhandsgranskadPodd = null;
                 await LaddaAllaPoddar();
-                
+
             }
             catch (Exception ex)
             {
@@ -116,7 +116,7 @@ namespace PodCastApplikation
 
                 MessageBox.Show($"Förhandsgranskning klar: '{poddPreview.OriginalTitel}'");
 
-            
+
             }
             catch (Exception ex)
             {
@@ -126,26 +126,13 @@ namespace PodCastApplikation
 
 
 
-        //private async void BtnVisaAlla_Click(object sender, EventArgs e)
-        //{
-        //    try
-        //    {
-        //        await LaddaAllaPoddar();
-                
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"Fel: {ex.Message}");
-        //    }
-        //}
-
         private async Task LaddaAllaPoddar()
         {
             var poddar = await _service.HämtaAllaPoddar();
             _visadePoddar = poddar;
 
             lstSparadePoddar.Items.Clear();
-            
+
 
             foreach (var podd in poddar)
             {
@@ -181,12 +168,12 @@ namespace PodCastApplikation
 
                 _visadePoddar.Remove(valdPodd);
                 lstSparadePoddar.Items.RemoveAt(lstSparadePoddar.SelectedIndex);
-                lstAvsnitt.Items.Clear(); 
+                lstAvsnitt.Items.Clear();
 
-               
+
 
                 MessageBox.Show("Podd raderad.");
-                
+
             }
             catch (Exception ex)
             {
@@ -194,7 +181,7 @@ namespace PodCastApplikation
             }
         }
 
-      
+
 
         private async void BtnBytNamnPodd_Click(object sender, EventArgs e)
         {
@@ -345,15 +332,21 @@ namespace PodCastApplikation
 
             try
             {
+                // 🔹 Töm avsnittslistan när filtrering ändras
+                lstAvsnitt.Items.Clear();
+                txtTitel.Clear();
+                txtDatum.Clear();
+                txtBeskrivning.Clear();
+
                 var valdKategori = cmbFiltreraKategori.SelectedItem as Kategori;
                 if (valdKategori == null)
                     return;
 
 
-                // Hämta alla poddar
+                
                 var allaPoddar = await _service.HämtaAllaPoddar();
 
-                // 3️⃣ Filtrera
+               
                 if (valdKategori.Namn.Equals("AllaPoddar", StringComparison.OrdinalIgnoreCase))
                 {
                     _visadePoddar = allaPoddar; // Visa alla
@@ -394,15 +387,21 @@ namespace PodCastApplikation
             await KontrolleraStandardKategori();
             await LaddaKategorier();
             await LaddaAllaPoddar();
-           
+
         }
 
-      
+
 
         private async void LstSparadePoddar_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lstSparadePoddar.SelectedIndex < 0)
                 return;
+
+            // 🔹 Rensa tidigare avsnitt
+            lstAvsnitt.Items.Clear();
+            txtTitel.Clear();
+            txtDatum.Clear();
+            txtBeskrivning.Clear();
 
             var allaPoddar = await _service.HämtaAllaPoddar();
             var valdPodd = allaPoddar[lstSparadePoddar.SelectedIndex];
@@ -416,7 +415,7 @@ namespace PodCastApplikation
             }
         }
 
-        
+
     }
 
-}       
+}
