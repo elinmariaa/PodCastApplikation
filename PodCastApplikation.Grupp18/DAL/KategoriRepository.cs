@@ -17,7 +17,7 @@ namespace PodCastApplikation.DAL
             var connectionString = "mongodb+srv://OruMongoDBAdmin2:orumongoDB@orumongodb.wtryamo.mongodb.net/OruMongoDB?retryWrites=true&w=majority";
 
             _client = new MongoClient(connectionString);
-            _database = _client.GetDatabase("OruMongoDB");
+            _database = _client.GetDatabase("opponering");
             _kategorier = _database.GetCollection<Kategori>("Kategorier");
         }
 

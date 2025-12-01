@@ -26,7 +26,7 @@ namespace PodCastApplikation.DAL
       
             _client = new MongoClient(conncetionString); 
 
-            _database = _client.GetDatabase("OruMongoDB"); 
+            _database = _client.GetDatabase("opponering"); 
 
      
             _poddar = _database.GetCollection<Podd>("Poddar");
