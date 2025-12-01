@@ -121,7 +121,7 @@ public class PoddService : IPoddService
             throw new KeyNotFoundException("Podd med angivet ID hittades inte.");
         }
 
-        podd.AnvändarTitel = nyttNamn;
+        podd.AnvändarTitel = nyttNamn.Trim();
 
         await _poddRepository.UppdateraPodd(podd);
     }
@@ -178,62 +178,44 @@ public class PoddService : IPoddService
     }
 
    
-    //public async Task UppdateraKategori(string kategoriId, string nyttNamn)
-    //{
-    //    if (string.IsNullOrWhiteSpace(nyttNamn) || nyttNamn.Trim().Length < 2 || nyttNamn.Trim().Length > 50)
-    //    {
-    //        throw new ArgumentException("Det angivna kategorinamnet är ogiltigt.");
-    //    }
-    //    var allaKategorier = await _kategoriRepository.HämtaAllaKategorier();
-       
-    //    var kategori = allaKategorier
-    //        .FirstOrDefault(k => k.Id == kategoriId);
-
-    //    if (kategori == null)
-    //    {
-    //        throw new KeyNotFoundException("Kategorin med angivet ID hittades inte.");
-    //    }
-       
-    //    bool finnsRedan = allaKategorier
-    //        .Any(k => k.Namn.Equals(nyttNamn, StringComparison.OrdinalIgnoreCase) && k.Id != kategoriId);
-       
-    //    if (finnsRedan)
-    //    {
-    //        throw new InvalidOperationException("En annan kategori med samma namn finns redan i systemet.");
-    //    }
-        
-    //    kategori.Namn = nyttNamn;
-       
-    //    await _kategoriRepository.UppdateraKategori(kategori);
-    //}
+ 
 
     
     public async Task TaBortKategori(string kategoriId)
     {
-        if (string.IsNullOrWhiteSpace(kategoriId))
+        try
         {
-            throw new ArgumentException("Kategori-ID får inte vara tomt.");
-        }
-        var allaKategorier = await _kategoriRepository.HämtaAllaKategorier();
-        
-        var kategori = allaKategorier
-            .FirstOrDefault(k => k.Id == kategoriId);
-        
-        if (kategori == null)
-        {
-            throw new KeyNotFoundException("Kategorin med angivet ID hittades inte.");
-        }
 
-        var allaPoddar = await _poddRepository.HämtaAllaPoddar();
-        
-        bool användsAvPodd = allaPoddar
-            .Any(p => p.KategoriId == kategoriId);
-        if (användsAvPodd)
-        {
-            throw new InvalidOperationException("Kategorin kan inte tas bort eftersom den används av en eller flera poddar.");  
-        }
 
-        await _kategoriRepository.TaBortKategori(kategoriId);
+            if (string.IsNullOrWhiteSpace(kategoriId))
+            {
+                throw new ArgumentException("Kategori-ID får inte vara tomt.");
+            }
+            var allaKategorier = await _kategoriRepository.HämtaAllaKategorier();
+
+            var kategori = allaKategorier
+                .FirstOrDefault(k => k.Id == kategoriId);
+
+            if (kategori == null)
+            {
+                throw new KeyNotFoundException("Kategorin med angivet ID hittades inte.");
+            }
+
+            var allaPoddar = await _poddRepository.HämtaAllaPoddar();
+
+            bool användsAvPodd = allaPoddar
+                .Any(p => p.KategoriId == kategoriId);
+            if (användsAvPodd)
+            {
+                throw new InvalidOperationException("Kategorin kan inte tas bort eftersom den används av en eller flera poddar.");
+            }
+
+            await _kategoriRepository.TaBortKategori(kategoriId);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Fel i PoddService.TaBortKategori.", ex);
+        }
     }
 
     

@@ -40,23 +40,21 @@ namespace PodCastApplikation
         {
             try
             {
-
                 if (_senastFörhandsgranskadPodd == null)
                 {
                     MessageBox.Show("Förhandsgranska en podd innan du sparar den.");
                     return;
                 }
 
-                // 2️⃣ Hämta vald kategori (som faktiskt är ett objekt)
+                // 🔹 Hämta vald kategori (som faktiskt är ett objekt)
                 var valdKategori = cmbValjKategori.SelectedItem as Kategori;
 
-                // 3️⃣ Om ingen kategori är vald, använd eller skapa 'AllaPoddar'
+                // 🔹 Om ingen kategori vald – använd eller skapa 'AllaPoddar'
                 if (valdKategori == null)
                 {
                     var allaKategorier = await _service.HämtaAllaKategorier();
                     valdKategori = allaKategorier
                         .FirstOrDefault(k => k.Namn.Equals("AllaPoddar", StringComparison.OrdinalIgnoreCase));
-
 
                     if (valdKategori == null)
                     {
@@ -66,18 +64,27 @@ namespace PodCastApplikation
                     }
                 }
 
+                // 🔹 Spara podden i databasen
+                var nyPodd = await _service.LäggTillPoddMedKategori(
+                    _senastFörhandsgranskadPodd.RssURL, valdKategori.Id);
 
-                var nyPodd = await _service.LäggTillPoddMedKategori
-                    (_senastFörhandsgranskadPodd.RssURL, valdKategori.Id);
+                // 🔹 Om användaren skrivit ett nytt namn – uppdatera direkt i databasen
+                if (!string.IsNullOrWhiteSpace(txtNyttNamn.Text))
+                {
+                    await _service.UppdateraPoddNamn(nyPodd.Id, txtNyttNamn.Text.Trim());
+                    nyPodd.AnvändarTitel = txtNyttNamn.Text.Trim(); // Uppdatera i minnet också
+                }
 
-                MessageBox.Show($"Podd '{nyPodd.OriginalTitel}' sparad i kategorin '{valdKategori.Namn}'.");
+                MessageBox.Show($"Podd '{(string.IsNullOrWhiteSpace(nyPodd.AnvändarTitel) ? nyPodd.OriginalTitel : nyPodd.AnvändarTitel)}' sparad i kategorin '{valdKategori.Namn}'.");
 
+                // 🔹 Rensa förhandsvisningen
                 txtPreviewTitel.Text = "";
                 txtPreviewBeskrivning.Text = "";
                 txtRssLank.Text = "";
+                txtNyttNamn.Text = "";
                 _senastFörhandsgranskadPodd = null;
-                await LaddaAllaPoddar();
 
+                await LaddaAllaPoddar();
             }
             catch (Exception ex)
             {
@@ -137,7 +144,13 @@ namespace PodCastApplikation
             foreach (var podd in poddar)
             {
 
-                lstSparadePoddar.Items.Add(podd.OriginalTitel);
+                // 🔹 Visa användartitel om den finns, annars originaltitel
+                var visningsNamn = string.IsNullOrWhiteSpace(podd.AnvändarTitel)
+                    ? podd.OriginalTitel
+                    : podd.AnvändarTitel;
+
+                lstSparadePoddar.Items.Add(visningsNamn);
+
             }
         }
 
@@ -187,9 +200,9 @@ namespace PodCastApplikation
         {
             try
             {
-                if (lstSparadePoddar.SelectedIndex < 0)
+                if (_senastFörhandsgranskadPodd == null)
                 {
-                    MessageBox.Show("Välj en podd.");
+                    MessageBox.Show("Du kan bara byta namn på en förhandsgranskad podd");
                     return;
                 }
 
@@ -201,20 +214,11 @@ namespace PodCastApplikation
                     return;
                 }
 
-                var valdPodd = _visadePoddar[lstSparadePoddar.SelectedIndex];
+                _senastFörhandsgranskadPodd.OriginalTitel = nyttNamn;
+                txtPreviewTitel.Text = nyttNamn;
 
-                var confirm = MessageBox.Show($"Vill du byta namn på '{valdPodd.OriginalTitel}' till '{nyttNamn}'?",
-            "Bekräfta namnbyte",
-            MessageBoxButtons.YesNo,
-            MessageBoxIcon.Question);
 
-                if (confirm != DialogResult.Yes)
-                    return;
-
-                await _service.UppdateraPoddNamn(valdPodd.Id, nyttNamn);
-
-                MessageBox.Show("Namn ändrat.");
-                await LaddaAllaPoddar();
+                MessageBox.Show($"Namnet har ändrats till '{nyttNamn}'. Du kan nu spara podden.");
             }
             catch (Exception ex)
             {
@@ -368,7 +372,11 @@ namespace PodCastApplikation
 
                 foreach (var podd in _visadePoddar)
                 {
-                    lstSparadePoddar.Items.Add(podd.OriginalTitel);
+                       var visningsNamn = string.IsNullOrWhiteSpace(podd.AnvändarTitel)
+            ? podd.OriginalTitel
+            : podd.AnvändarTitel;
+
+                    lstSparadePoddar.Items.Add(visningsNamn);
                 }
 
             }
