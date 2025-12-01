@@ -362,7 +362,7 @@ namespace PodCastApplikation
 
                 if (_visadePoddar.Count == 0)
                 {
-                    MessageBox.Show("Inga poddar i denna kategori");
+                    //MessageBox.Show("Inga poddar i denna kategori");
                     return;
                 }
 
